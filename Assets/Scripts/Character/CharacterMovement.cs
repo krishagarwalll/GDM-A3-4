@@ -7,12 +7,11 @@ public class CharacterMovement : MonoBehaviour {
 
     private const float MOVE_SPEED = 6f;
 
-    private Rigidbody2D rigidbody2D;
+    private Rigidbody2D rb;
     private Vector3 moveDir;
-    private bool isDashButtonDown;
-
+    
     private void Awake() {
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update() {
@@ -38,7 +37,7 @@ public class CharacterMovement : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        rigidbody2D.linearVelocity = moveDir * MOVE_SPEED;
+        rb.linearVelocity = moveDir * MOVE_SPEED;
     }
 
 }
