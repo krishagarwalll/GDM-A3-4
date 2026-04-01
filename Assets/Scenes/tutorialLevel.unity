@@ -3445,6 +3445,7 @@ GameObject:
   - component: {fileID: 554309444}
   - component: {fileID: 554309443}
   - component: {fileID: 554309446}
+  - component: {fileID: 554309447}
   m_Layer: 0
   m_Name: Key
   m_TagString: Untagged
@@ -3572,6 +3573,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.6815151}
   m_EdgeRadius: 0
+--- !u!114 &554309447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554309442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf6b085df5d4417fb9a9af1bdb86d4c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeyInteractable
+  keyCount: 1
+  interactText: Pick up key
 --- !u!1 &665945149
 GameObject:
   m_ObjectHideFlags: 0
@@ -5163,6 +5178,7 @@ GameObject:
   - component: {fileID: 1121633131}
   - component: {fileID: 1121633134}
   - component: {fileID: 1121633135}
+  - component: {fileID: 1121633136}
   m_Layer: 0
   m_Name: Chest
   m_TagString: Untagged
@@ -5312,6 +5328,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1121633136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121633130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c181b28ad3146ce91a4dfdfd0a3671b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChestInteractable
+  animator: {fileID: 1121633135}
+  openTriggerName: Open
+  interactText: Open chest
+  openedText: Chest is open
+  missingKeyText: Need a key
+  consumeKeyOnOpen: 1
 --- !u!1 &1246830482
 GameObject:
   m_ObjectHideFlags: 0
@@ -5371,8 +5405,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: interactive Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0552be0e7fe1245b89114fdcc73ce670, type: 2}
+  m_sharedMaterial: {fileID: -8355074065861639795, guid: 0552be0e7fe1245b89114fdcc73ce670, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5396,8 +5430,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5635,6 +5669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc380fd8522e47159fd8b457f7d1274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
+  interactRange: 1
 --- !u!114 &1484834603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6422,11 +6457,11 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1337520435}
-  - {fileID: 1484834597}
+  - {fileID: 911209804}
   - {fileID: 542124049}
+  - {fileID: 1484834597}
   - {fileID: 1121633132}
   - {fileID: 554309444}
+  - {fileID: 1622099499}
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 911209804}
-  - {fileID: 1622099499}

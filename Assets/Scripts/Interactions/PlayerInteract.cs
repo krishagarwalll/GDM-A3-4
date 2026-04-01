@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteract : MonoBehaviour
 {
+    [SerializeField] private float interactRange = 3f;
+
     private void Update()
     {
         if (Keyboard.current.eKey.wasPressedThisFrame) 
@@ -18,15 +20,23 @@ public class PlayerInteract : MonoBehaviour
     
     public IInteractable GetInteractableObject() 
     {
-        float interactRange = 3f;
         Collider2D[] colliderArray = Physics2D.OverlapCircleAll(transform.position, interactRange);
+        IInteractable closestInteractable = null;
+        float closestDistanceSqr = float.MaxValue;
+
         foreach (Collider2D collider in colliderArray) 
         {
             if (collider.TryGetComponent(out IInteractable interactable)) 
             {
-                return interactable;
+                float distanceSqr = (collider.transform.position - transform.position).sqrMagnitude;
+                if (distanceSqr < closestDistanceSqr)
+                {
+                    closestDistanceSqr = distanceSqr;
+                    closestInteractable = interactable;
+                }
             }
         }
-        return null;
+
+        return closestInteractable;
     }
 }

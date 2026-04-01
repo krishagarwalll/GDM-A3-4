@@ -9,3 +9,6 @@ https://ninjikin.itch.io/treasure
 
 Keybind:
 https://dreammixgames.itch.io/keyboard-keys-for-ui
+
+Monogram Font:
+https://datagoblin.itch.io/monogram
