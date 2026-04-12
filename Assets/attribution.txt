@@ -12,3 +12,9 @@ https://dreammixgames.itch.io/keyboard-keys-for-ui
 
 Monogram Font:
 https://datagoblin.itch.io/monogram
+
+2D Pixel Art Medieval Thief Sprites:
+https://elthen.itch.io/2d-pixel-art-medieval-thief
+
+A* Pathfinding:
+https://www.arongranberg.com/astar/
