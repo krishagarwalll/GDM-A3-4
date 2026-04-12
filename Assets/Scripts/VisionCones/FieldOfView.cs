@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FieldOfView : MonoBehaviour {
@@ -23,7 +20,7 @@ public class FieldOfView : MonoBehaviour {
 
     private void LateUpdate() {
         int rayCount = 30;
-        float angle = 0f;
+        float angle = startingAngle;
         float angleIncrease = fov / rayCount;
         
         Vector3[] vertices = new Vector3[rayCount +1 +1];
@@ -39,9 +36,7 @@ public class FieldOfView : MonoBehaviour {
             Vector3 vertex;
             Vector3 direction = Utils.GetVectorFromAngle(angle);
             Vector3 worldDirection = transform.TransformDirection(direction);
-            RaycastHit2D raycastHit2D = layerMask.value == 0
-                ? Physics2D.Raycast(transform.position, worldDirection, viewDistance)
-                : Physics2D.Raycast(transform.position, worldDirection, viewDistance, layerMask);
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, worldDirection, viewDistance, layerMask);
             
             if (raycastHit2D.collider == null) {
                 vertex = origin + direction * viewDistance;
@@ -82,6 +77,12 @@ public class FieldOfView : MonoBehaviour {
     
     public void SetViewDistance(float viewDistance) {
         this.viewDistance = viewDistance;
+    }
+
+    public bool CanSeeTarget()
+    {
+        //todo
+        return true;
     }
     
 }

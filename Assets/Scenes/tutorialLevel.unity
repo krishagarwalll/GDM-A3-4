@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 30743961}
   - component: {fileID: 30743963}
   - component: {fileID: 30743962}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BigRug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -749,7 +749,7 @@ GameObject:
   - component: {fileID: 79285971}
   - component: {fileID: 79285973}
   - component: {fileID: 79285972}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1863,7 +1863,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &163710083
@@ -1888,7 +1888,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldOfView
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 65
 --- !u!4 &163710085
 Transform:
   m_ObjectHideFlags: 0
@@ -3631,13 +3631,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1530728019}
+  - {fileID: 792803454}
   - {fileID: 798696370}
   - {fileID: 378967695}
   - {fileID: 665945150}
   - {fileID: 30743961}
   - {fileID: 79285971}
-  - {fileID: 1530728019}
-  - {fileID: 792803454}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &554309442
@@ -3804,7 +3804,7 @@ GameObject:
   - component: {fileID: 665945150}
   - component: {fileID: 665945152}
   - component: {fileID: 665945151}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rugs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
