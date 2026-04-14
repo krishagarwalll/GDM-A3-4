@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour {
+    [SerializeField] private Transform pfFieldOfView;
+    private FieldOfView fieldOfView;
+    
     private enum State {
         Patrol,
         Suspicious,
@@ -12,12 +15,14 @@ public class EnemyAI : MonoBehaviour {
 
     private State state;
     
-    private void Awake()
-    {
-        
+    private void Start() {
+        fieldOfView = Instantiate(pfFieldOfView, null).GetComponent<FieldOfView>();
     }
 
     private void Update() { //Todo
+        fieldOfView.SetOrigin(transform.position);
+        //fieldOfView.SetAimDirection(fieldOfView.GetAimDir());
+        
         switch (state) {
             case State.Patrol:
                 break;
@@ -35,5 +40,12 @@ public class EnemyAI : MonoBehaviour {
     private void ChangeState(State newState)
     {
         //Todo
+    }
+
+    private void FindTarget() {
+        float targetRange = 10f;
+        if (Vector3.Distance(transform.position, Player.Instance.GetPosition) < targetRange) {
+            //Player is in range
+        }
     }
 }

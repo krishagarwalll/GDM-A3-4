@@ -16,6 +16,7 @@ public class FieldOfView : MonoBehaviour {
         fov = 40f;
         viewDistance = 3f;
         origin = Vector3.zero;
+        startingAngle = fov / 2f;
     }
 
     private void LateUpdate() {
@@ -34,14 +35,12 @@ public class FieldOfView : MonoBehaviour {
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
-            Vector3 direction = Utils.GetVectorFromAngle(angle);
-            Vector3 worldDirection = transform.TransformDirection(direction);
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, worldDirection, viewDistance, layerMask);
-            
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, Utils.GetVectorFromAngle(angle), viewDistance, layerMask);
+
             if (raycastHit2D.collider == null) {
-                vertex = origin + direction * viewDistance;
+                vertex = origin + Utils.GetVectorFromAngle(angle) * viewDistance;
             } else {
-                vertex = transform.InverseTransformPoint(raycastHit2D.point);
+                vertex = raycastHit2D.point;
             }
             vertices[vertexIndex] = vertex;
             
@@ -66,23 +65,21 @@ public class FieldOfView : MonoBehaviour {
     public void SetOrigin(Vector3 origin) {
         this.origin = origin;
     }
-    
+
     public void SetAimDirection(Vector3 aimDirection) {
         startingAngle = Utils.GetAngleFromVectorFloat(aimDirection) + fov / 2f;
     }
-    
+
+    public Vector3 GetAimDir() {
+        return Utils.GetVectorFromAngle(startingAngle - fov / 2f);
+    }
+
     public void SetFoV(float fov) {
         this.fov = fov;
     }
-    
+
     public void SetViewDistance(float viewDistance) {
         this.viewDistance = viewDistance;
-    }
-
-    public bool CanSeeTarget()
-    {
-        //todo
-        return true;
     }
     
 }

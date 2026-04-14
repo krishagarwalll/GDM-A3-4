@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CharacterMovement : MonoBehaviour {
+public class Player : MonoBehaviour {
+    
+    public static Player Instance { get; private set; }
 
     private const float MOVE_SPEED = 6f;
 
@@ -43,5 +45,7 @@ public class CharacterMovement : MonoBehaviour {
     private void FixedUpdate() {
         rb.linearVelocity = moveDir * MOVE_SPEED;
     }
+    
+    public Vector3 GetPosition => transform.position;
 
 }
