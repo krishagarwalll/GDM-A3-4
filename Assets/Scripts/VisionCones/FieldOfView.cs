@@ -3,9 +3,10 @@ using UnityEngine;
 public class FieldOfView : MonoBehaviour {
     
     [SerializeField] private LayerMask layerMask;
+    [SerializeField, Range(10f, 180f)] private float fov = 40f;
+    [SerializeField, Range(1f, 20f)] private float viewDistance = 3f;
+    [SerializeField, Range(10, 200)] private int rayCount = 30;
     private Mesh mesh;
-    private float fov;
-    private float viewDistance;
     private Vector3 origin;
     private float startingAngle;
 
@@ -13,14 +14,11 @@ public class FieldOfView : MonoBehaviour {
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        fov = 40f;
-        viewDistance = 3f;
         origin = Vector3.zero;
         startingAngle = fov / 2f;
     }
 
     private void LateUpdate() {
-        int rayCount = 30;
         float angle = startingAngle;
         float angleIncrease = fov / rayCount;
         

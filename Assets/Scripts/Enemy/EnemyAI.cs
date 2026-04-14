@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour {
     [SerializeField] private Transform pfFieldOfView;
+    [SerializeField, Range(1f, 20f)] private float moveSpeed = 3f;
+    [SerializeField, Range(1f, 20f)] private float targetRange = 10f;
     private FieldOfView fieldOfView;
-    
+
     private enum State {
         Patrol,
         Suspicious,
