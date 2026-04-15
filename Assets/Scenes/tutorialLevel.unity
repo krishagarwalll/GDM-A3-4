@@ -1929,7 +1929,6 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
-  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2087,18 +2086,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!114 &330585549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7c1791bdb5847ea9ef93a5ab86f938c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameSceneManager
 --- !u!1 &378967694
 GameObject:
   m_ObjectHideFlags: 0
@@ -2692,7 +2679,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 3
-      m_TileSpriteIndex: 3
+      m_TileSpriteIndex: 4
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -3219,10 +3206,10 @@ Tilemap:
     m_Data: {fileID: -497659322, guid: f9d58a9e499ca48a2abafdb842704da4, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: -1710547033, guid: f9d58a9e499ca48a2abafdb842704da4, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 586234120, guid: f9d58a9e499ca48a2abafdb842704da4, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 586234120, guid: f9d58a9e499ca48a2abafdb842704da4, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -764683351, guid: f9d58a9e499ca48a2abafdb842704da4, type: 3}
   - m_RefCount: 2

@@ -1,74 +1,57 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-
 
 public class GameSceneManager : MonoBehaviour
 {
-    public void LoadFirstLevel()
+    public enum SceneIndex
     {
-        DontDestroyOnLoad(gameObject);
-        SceneManager.LoadScene("tutorialLevel");
+        MainMenu = 0,
+        LevelSelect = 1,
+        tutorialLevel = 2
     }
 
-}
+    public static GameSceneManager Instance { get; private set; }
 
-//using System.Collections;
-//using UnityEngine;
-//using UnityEngine.InputSystem;
-//using UnityEngine.SceneManagement;
+    void Awake()
+    {
+        if (Instance != null) { Destroy(gameObject); return; }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
-//public class GameSceneManager : MonoBehaviour
-//{
-    //public enum SceneIndex
-    //{
-        //MainMenu = 0,
-        //LevelSelect   = 1,
-        //Level0   = 2
-    //}
+    void Update()
+    {
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return;
 
-    //public static GameSceneManager Instance { get; private set; }
-
-    //void Awake()
-    //{
-        //if (Instance != null) { Destroy(gameObject); return; }
-        //Instance = this;
-        //DontDestroyOnLoad(gameObject);
-    //}
-
-    //void Update()
-    //{
-        //var keyboard = Keyboard.current;
-        //if (keyboard == null) return;
-
-        //if (keyboard.rKey.wasPressedThisFrame)
-            //ReloadCurrentScene();
-    //}
+        if (keyboard.rKey.wasPressedThisFrame)
+            ReloadCurrentScene();
+    }
 
     // For use in code
-    //public void LoadScene(SceneIndex scene)
-    //{
-        //StartCoroutine(LoadRoutine((int)scene));
-    //}
+    public void LoadScene(SceneIndex scene)
+    {
+        StartCoroutine(LoadRoutine((int)scene));
+    }
 
     // For use on UI buttons in the Inspector
-    //public void LoadScene(int buildIndex)
-    //{
-        //StartCoroutine(LoadRoutine(buildIndex));
-    //}
+    public void LoadScene(int buildIndex)
+    {
+        StartCoroutine(LoadRoutine(buildIndex));
+    }
 
-    //public void ReloadCurrentScene()
-    //{
-        //StartCoroutine(LoadRoutine(SceneManager.GetActiveScene().buildIndex));
-    //}
+    public void ReloadCurrentScene()
+    {
+        StartCoroutine(LoadRoutine(SceneManager.GetActiveScene().buildIndex));
+    }
 
-    //private IEnumerator LoadRoutine(int buildIndex)
-    //{
-        //AsyncOperation op = SceneManager.LoadSceneAsync(buildIndex);
+    private IEnumerator LoadRoutine(int buildIndex)
+    {
+        AsyncOperation op = SceneManager.LoadSceneAsync(buildIndex);
 
-        //while (!op.isDone)
-            //yield return null;
-    //}
-//}
+        while (!op.isDone)
+            yield return null;
+    }
+}
