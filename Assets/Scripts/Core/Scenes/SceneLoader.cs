@@ -6,15 +6,6 @@ using Game.Core.Events;
 
 namespace Game.Core.Scenes
 {
-    /// <summary>
-    /// Lives in the _PersistentManagers scene. Listens on a GameSceneEventChannelSO
-    /// for load-scene requests, then unloads the current gameplay scene and
-    /// additively loads the requested one.
-    ///
-    /// Anyone who wants to change scenes raises the channel — they never call
-    /// SceneManager directly. This means UI buttons hold no cross-scene references
-    /// and can't break when scenes reload.
-    /// </summary>
     public class SceneLoader : MonoBehaviour
     {
         [Header("Channels (input)")]
@@ -24,10 +15,8 @@ namespace Game.Core.Scenes
         [SerializeField] private VoidEventChannelSO onSceneLoaded;
 
         [Header("Hotkeys")]
-        [Tooltip("Press to reload the currently active gameplay scene.")]
         [SerializeField] private bool reloadOnRKey = true;
 
-        // Tracks which gameplay scene is currently loaded on top of _PersistentManagers
         private GameSceneSO _currentScene;
         private bool _isLoading;
 
@@ -70,7 +59,6 @@ namespace Game.Core.Scenes
         {
             _isLoading = true;
 
-            // Unload the previously loaded gameplay scene if any
             if (_currentScene != null && _currentScene != target)
             {
                 var loaded = SceneManager.GetSceneByName(_currentScene.sceneName);
@@ -79,17 +67,14 @@ namespace Game.Core.Scenes
             }
             else if (_currentScene == target)
             {
-                // Reload: unload + reload
                 var loaded = SceneManager.GetSceneByName(target.sceneName);
                 if (loaded.IsValid() && loaded.isLoaded)
                     yield return SceneManager.UnloadSceneAsync(loaded);
             }
 
-            // Additively load the target
             var op = SceneManager.LoadSceneAsync(target.sceneName, LoadSceneMode.Additive);
             yield return op;
 
-            // Make it the active scene so newly-instantiated objects land in it
             var newScene = SceneManager.GetSceneByName(target.sceneName);
             if (newScene.IsValid())
                 SceneManager.SetActiveScene(newScene);
