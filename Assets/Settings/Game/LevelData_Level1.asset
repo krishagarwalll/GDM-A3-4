@@ -16,6 +16,6 @@ MonoBehaviour:
   objectiveLabel: Paintings
   durationSeconds: 5
   objectiveCount: 3
-  currentScene: {fileID: 0}
+  currentScene: {fileID: 11400000, guid: a5afc3f4de8feb042af486a08298a8f6, type: 2}
   nextScene: {fileID: 11400000, guid: b22ff737943449c4997f2142ab9cfcbc, type: 2}
   mainMenuScene: {fileID: 11400000, guid: 7813af2e109bf3a4f80ff0bc62326438, type: 2}
