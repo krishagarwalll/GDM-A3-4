@@ -12,6 +12,7 @@ public class PaintingInteractable : MonoBehaviour, IInteractable
     [SerializeField] private VoidEventChannelSO onStolen;
 
     [Header("Visuals")]
+    [SerializeField] private GameObject hideOnSteal;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
     [SerializeField] private string stolenTriggerName = "Stolen";
@@ -33,6 +34,8 @@ public class PaintingInteractable : MonoBehaviour, IInteractable
 
         if (animator != null && !string.IsNullOrWhiteSpace(stolenTriggerName))
             animator.SetTrigger(stolenTriggerName);
+        else if (hideOnSteal != null)
+            hideOnSteal.SetActive(false);
         else if (spriteRenderer != null)
             spriteRenderer.enabled = false;
 

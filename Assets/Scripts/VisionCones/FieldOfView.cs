@@ -1,14 +1,20 @@
 using UnityEngine;
+using Game.Core.Events;
 
 public class FieldOfView : MonoBehaviour {
-    
+
     [SerializeField] private LayerMask layerMask;
     [SerializeField, Range(10f, 180f)] private float fov = 40f;
     [SerializeField, Range(1f, 20f)] private float viewDistance = 3f;
     [SerializeField, Range(10, 200)] private int rayCount = 30;
+
+    [Header("Detection")]
+    [SerializeField] private VoidEventChannelSO onPlayerSpotted;
+
     private Mesh mesh;
     private Vector3 origin;
     private float startingAngle;
+    private bool spotted;
 
     private void Start()
     {
@@ -58,6 +64,33 @@ public class FieldOfView : MonoBehaviour {
         mesh.uv = uv;
         mesh.triangles = triangles;
         mesh.bounds = new Bounds(origin, Vector3.one * 1000f);
+
+        DetectPlayer();
+    }
+
+    private void DetectPlayer()
+    {
+        if (spotted) return;
+        if (Player.Instance == null) return;
+
+        Vector3 playerPos = Player.Instance.GetPosition;
+        Vector3 toPlayer = playerPos - origin;
+        float dist = toPlayer.magnitude;
+        if (dist > viewDistance) return;
+
+        Vector3 aim = Utils.GetVectorFromAngle(startingAngle - fov / 2f);
+        if (Vector3.Angle(aim, toPlayer.normalized) > fov / 2f) return;
+
+        var hit = Physics2D.Raycast(origin, toPlayer.normalized, dist, layerMask);
+        if (hit.collider != null) return;
+
+        spotted = true;
+        onPlayerSpotted?.Raise();
+    }
+
+    private void OnDisable()
+    {
+        spotted = false;
     }
     
     public void SetOrigin(Vector3 origin) {

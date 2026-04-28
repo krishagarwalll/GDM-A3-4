@@ -48,7 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldOfView
   layerMask:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 64
+  fov: 40
+  viewDistance: 3
+  rayCount: 30
+  onPlayerSpotted: {fileID: 11400000, guid: ce6359bb8fb43664ea94c06d5f985096, type: 2}
 --- !u!33 &3227803826899911991
 MeshFilter:
   m_ObjectHideFlags: 0

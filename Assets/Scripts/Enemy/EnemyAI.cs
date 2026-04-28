@@ -80,4 +80,12 @@ public class EnemyAI : MonoBehaviour {
             //Player is in range
         }
     }
+
+    private void OnDisable() {
+        if (fieldOfView != null) fieldOfView.gameObject.SetActive(false);
+    }
+
+    private void OnEnable() {
+        if (fieldOfView != null) fieldOfView.gameObject.SetActive(true);
+    }
 }

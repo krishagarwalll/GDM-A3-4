@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.LevelDataSO
   displayName: Level 1
   objectiveLabel: Paintings
-  durationSeconds: 5
+  durationSeconds: 120
   objectiveCount: 3
   currentScene: {fileID: 11400000, guid: a5afc3f4de8feb042af486a08298a8f6, type: 2}
   nextScene: {fileID: 11400000, guid: b22ff737943449c4997f2142ab9cfcbc, type: 2}
