@@ -1,4 +1,5 @@
 using UnityEngine;
+using Game.Core.Events;
 
 [DisallowMultipleComponent]
 public class ChestInteractable : MonoBehaviour, IInteractable
@@ -9,6 +10,9 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     [SerializeField] private string openedText = "Chest is open";
     [SerializeField] private string missingKeyText = "Need a key";
     [SerializeField] private bool consumeKeyOnOpen = true;
+
+    [Header("Channels (output)")]
+    [SerializeField] private VoidEventChannelSO onOpened;
 
     private bool isOpen;
 
@@ -37,6 +41,8 @@ public class ChestInteractable : MonoBehaviour, IInteractable
 
         if (animator && !string.IsNullOrWhiteSpace(openTriggerName))
             animator.SetTrigger(openTriggerName);
+
+        onOpened?.Raise();
     }
 
     public string GetInteractiveText()
