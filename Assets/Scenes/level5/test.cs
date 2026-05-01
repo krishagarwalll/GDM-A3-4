@@ -9,7 +9,6 @@ public class PlayerSpotLight : MonoBehaviour
     {
         Vector2 input = Vector2.zero;
 
-        // ÐÂ°æ Input System Ð´·¨
         if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed)
             input.y = 1;
         else if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed)

@@ -112,5 +112,42 @@ public class FieldOfView : MonoBehaviour {
     public void SetViewDistance(float viewDistance) {
         this.viewDistance = viewDistance;
     }
-    
+
+    public bool IsPlayerVisible()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(origin, viewDistance);
+
+        foreach (var col in colliders)
+        {
+            if (!col.CompareTag("Player")) continue;
+
+            Vector3 toPlayer = col.transform.position - origin;
+            Vector3 aim = Utils.GetVectorFromAngle(startingAngle - fov / 2f);
+
+            if (Vector3.Angle(aim, toPlayer.normalized) > fov / 2f)
+            {
+                Debug.Log("[FOV] Player 不在角度内");
+                return false;
+            }
+
+            var hit = Physics2D.Raycast(origin, toPlayer.normalized, toPlayer.magnitude, layerMask);
+            if (hit.collider != null && !hit.collider.CompareTag("Player"))
+            {
+                Debug.Log($"[FOV] 被遮挡: {hit.collider.name}");
+                return false;
+            }
+
+            Debug.Log("[FOV]  看见了");
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsSpotted => spotted; 
+
+    public void ResetSpotted() 
+    {
+        spotted = false;
+    }
 }
