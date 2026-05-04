@@ -7,7 +7,8 @@ public enum GuardType {
     Patrolling
 }
 
-public class EnemyAI : MonoBehaviour {
+public class EnemyAI : MonoBehaviour
+{
 
     [Header("Type")]
     [SerializeField] private GuardType guardType = GuardType.Patrolling;
@@ -55,8 +56,14 @@ public class EnemyAI : MonoBehaviour {
     private float noiseLevel;
     private Vector3 heardNoisePos;
     private bool IsHearingActive => noiseLevel >= hearingThreshold;
+    //--level5 darkmode
+    private bool darkMode = false;
+    private float EffectivePatrolSpeed => darkMode ? patrolSpeed * 0.6f : patrolSpeed;
+    private float EffectiveChaseSpeed => darkMode ? chaseSpeed * 0.8f : chaseSpeed;
+    //--level5 darkmode
 
-    private enum State {
+    private enum State
+    {
         Patrol,
         Suspicious,
         Alert,
@@ -64,7 +71,8 @@ public class EnemyAI : MonoBehaviour {
         KnockedOut
     }
 
-    private void Start() {
+    private void Start()
+    {
         homePosition = transform.position;
 
         var fovInstance = Instantiate(pfFieldOfView, null);
@@ -77,7 +85,8 @@ public class EnemyAI : MonoBehaviour {
         EnterState(State.Patrol);
     }
 
-    private void Update() {
+    private void Update()
+    {
         if (PauseService.IsPaused) return;
         if (state == State.KnockedOut) return;
 
@@ -85,35 +94,44 @@ public class EnemyAI : MonoBehaviour {
         UpdateHearing();
         if (fieldOfView != null) fieldOfView.SetOrigin(transform.position);
 
-        switch (state) {
-            case State.Patrol:     PatrolUpdate(); break;
+        switch (state)
+        {
+            case State.Patrol: PatrolUpdate(); break;
             case State.Suspicious: SuspiciousUpdate(); break;
-            case State.Alert:      AlertUpdate(); break;
-            case State.Search:     SearchUpdate(); break;
+            case State.Alert: AlertUpdate(); break;
+            case State.Search: SearchUpdate(); break;
         }
 
         bool sweepDriving = visionSweep != null && visionSweep.enabled;
-        if (fieldOfView != null && !sweepDriving) {
+        if (fieldOfView != null && !sweepDriving)
+        {
             fieldOfView.SetAimDirection(lastMoveDirection);
         }
     }
 
     // --- States ---
 
-    private void PatrolUpdate() {
-        if (IsHearingActive) {
+    private void PatrolUpdate()
+    {
+        if (IsHearingActive)
+        {
             if (aiPath != null) aiPath.canMove = false;
             if (visionSweep != null) visionSweep.enabled = false;
             TurnTowards(heardNoisePos);
-        } else {
+        }
+        else
+        {
             Vector3 naturalDir = GetNaturalPatrolDirection();
             bool aligned = Vector3.Angle(lastMoveDirection, naturalDir) <= 1f;
 
-            if (!aligned) {
+            if (!aligned)
+            {
                 if (aiPath != null) aiPath.canMove = false;
                 if (visionSweep != null) visionSweep.enabled = false;
                 TurnTowardsDir(naturalDir);
-            } else {
+            }
+            else
+            {
                 if (aiPath != null && !aiPath.canMove) aiPath.canMove = true;
                 if (visionSweep != null && !visionSweep.enabled && guardType == GuardType.Static)
                     visionSweep.enabled = true;
@@ -121,57 +139,73 @@ public class EnemyAI : MonoBehaviour {
             }
         }
 
-        if (CanSeePlayer()) {
+        if (CanSeePlayer())
+        {
             lastKnownPlayerPos = Player.Instance.GetPosition;
             ChangeState(State.Suspicious);
         }
     }
 
-    private Vector3 GetNaturalPatrolDirection() {
-        if (guardType == GuardType.Static && visionSweep != null) {
+    private Vector3 GetNaturalPatrolDirection()
+    {
+        if (guardType == GuardType.Static && visionSweep != null)
+        {
             return visionSweep.GetCurrentSweepDirection();
         }
-        if (patroller != null && patroller.IsReady()) {
+        if (patroller != null && patroller.IsReady())
+        {
             Vector3 to = patroller.GetTarget() - transform.position;
             if (to.sqrMagnitude > 0.0001f) return to.normalized;
         }
         return lastMoveDirection;
     }
 
-    private void SuspiciousUpdate() {
+    private void SuspiciousUpdate()
+    {
         AimAt(lastKnownPlayerPos);
         if (CanSeePlayer()) lastKnownPlayerPos = Player.Instance.GetPosition;
         else if (IsHearingActive) lastKnownPlayerPos = heardNoisePos;
 
         stateTimer -= Time.deltaTime;
-        if (stateTimer <= 0f) {
+        if (stateTimer <= 0f)
+        {
             ChangeState(CanSeePlayer() ? State.Alert : State.Search);
         }
     }
 
-    private void AlertUpdate() {
+    private void AlertUpdate()
+    {
         bool sees = CanSeePlayer();
-        if (sees) {
+        if (sees)
+        {
             lastKnownPlayerPos = Player.Instance.GetPosition;
             stateTimer = lostSightDelay;
-        } else if (IsHearingActive) {
+        }
+        else if (IsHearingActive)
+        {
             lastKnownPlayerPos = heardNoisePos;
             stateTimer = lostSightDelay;
-        } else {
+        }
+        else
+        {
             stateTimer -= Time.deltaTime;
         }
 
-        if (aiPath != null) {
+        if (aiPath != null)
+        {
             aiPath.destination = ClampToLeash(lastKnownPlayerPos);
         }
 
-        if (!sees && stateTimer <= 0f) {
+        if (!sees && stateTimer <= 0f)
+        {
             ChangeState(State.Search);
         }
     }
 
-    private void SearchUpdate() {
-        if (CanSeePlayer()) {
+    private void SearchUpdate()
+    {
+        if (CanSeePlayer())
+        {
             lastKnownPlayerPos = Player.Instance.GetPosition;
             ChangeState(State.Alert);
             return;
@@ -179,95 +213,114 @@ public class EnemyAI : MonoBehaviour {
 
         if (IsHearingActive) lastKnownPlayerPos = heardNoisePos;
 
-        if (aiPath != null) {
+        if (aiPath != null)
+        {
             aiPath.destination = ClampToLeash(lastKnownPlayerPos);
         }
 
         stateTimer -= Time.deltaTime;
-        if (stateTimer <= 0f) {
+        if (stateTimer <= 0f)
+        {
             ChangeState(State.Patrol);
         }
     }
 
     // --- Helpers ---
 
-    private void DriveAlongPatroller() {
+    private void DriveAlongPatroller()
+    {
         if (patroller == null || !patroller.IsReady() || aiPath == null) return;
 
         aiPath.destination = patroller.GetTarget();
         if (aiPath.pathPending) return;
 
         bool pathDone = aiPath.hasPath && aiPath.reachedEndOfPath;
-        if (patroller.HasReached(transform.position) || pathDone) {
+        if (patroller.HasReached(transform.position) || pathDone)
+        {
             patroller.Advance();
             aiPath.destination = patroller.GetTarget();
             aiPath.SearchPath();
         }
     }
 
-    private bool CanSeePlayer() {
+    private bool CanSeePlayer()
+    {
         if (fieldOfView == null || Player.Instance == null) return false;
         float mult = (reduceVisionForCrouchedPlayer && Player.Instance.IsCrouching)
             ? crouchedDetectionMultiplier : 1f;
         return fieldOfView.IsTargetVisible(Player.Instance.GetPosition, mult);
     }
 
-    private void UpdateHearing() {
+    private void UpdateHearing()
+    {
         bool audible = Player.Instance != null
             && !Player.Instance.IsCrouching
             && Player.Instance.IsMoving
             && Vector3.Distance(transform.position, Player.Instance.GetPosition) <= hearingRadius;
 
-        if (audible) {
+        if (audible)
+        {
             heardNoisePos = Player.Instance.GetPosition;
             noiseLevel = Mathf.Min(noiseLevel + Time.deltaTime, hearingThreshold + 1f);
-        } else {
+        }
+        else
+        {
             noiseLevel = Mathf.Max(noiseLevel - Time.deltaTime * hearingDecayRate, 0f);
         }
     }
 
-    private void TurnTowards(Vector3 worldPoint) {
+    private void TurnTowards(Vector3 worldPoint)
+    {
         TurnTowardsDir(worldPoint - transform.position);
     }
 
-    private void TurnTowardsDir(Vector3 dir) {
+    private void TurnTowardsDir(Vector3 dir)
+    {
         if (dir.sqrMagnitude < 0.0001f) return;
         dir.Normalize();
         float maxRad = hearingTurnSpeed * Mathf.Deg2Rad * Time.deltaTime;
         lastMoveDirection = Vector3.RotateTowards(lastMoveDirection, dir, maxRad, 0f);
     }
 
-    private Vector3 ClampToLeash(Vector3 target) {
+    private Vector3 ClampToLeash(Vector3 target)
+    {
         if (guardType != GuardType.Static) return target;
         Vector3 fromHome = target - homePosition;
         if (fromHome.sqrMagnitude <= chaseLeashRadius * chaseLeashRadius) return target;
         return homePosition + fromHome.normalized * chaseLeashRadius;
     }
 
-    private void AimAt(Vector3 worldPoint) {
+    private void AimAt(Vector3 worldPoint)
+    {
         Vector3 dir = worldPoint - transform.position;
         if (dir.sqrMagnitude > 0.0001f) lastMoveDirection = dir.normalized;
     }
 
-    private void UpdateFacing() {
-        if (aiPath != null && aiPath.velocity.sqrMagnitude > 0.01f) {
+    private void UpdateFacing()
+    {
+        if (aiPath != null && aiPath.velocity.sqrMagnitude > 0.01f)
+        {
             lastMoveDirection = ((Vector3)aiPath.velocity).normalized;
         }
     }
 
     // --- Transitions ---
 
-    private void ChangeState(State newState) {
+    private void ChangeState(State newState)
+    {
         if (state == newState) return;
         state = newState;
         EnterState(newState);
     }
 
-    private void EnterState(State s) {
-        switch (s) {
+    private void EnterState(State s)
+    {
+        switch (s)
+        {
             case State.Patrol:
                 if (visionSweep != null) visionSweep.enabled = (guardType == GuardType.Static);
-                if (aiPath != null) {
+                if (aiPath != null)
+                {
                     aiPath.canMove = true;
                     aiPath.maxSpeed = patrolSpeed;
                 }
@@ -282,7 +335,8 @@ public class EnemyAI : MonoBehaviour {
 
             case State.Alert:
                 if (visionSweep != null) visionSweep.enabled = false;
-                if (aiPath != null) {
+                if (aiPath != null)
+                {
                     aiPath.canMove = true;
                     aiPath.maxSpeed = chaseSpeed;
                 }
@@ -291,7 +345,8 @@ public class EnemyAI : MonoBehaviour {
 
             case State.Search:
                 if (visionSweep != null) visionSweep.enabled = false;
-                if (aiPath != null) {
+                if (aiPath != null)
+                {
                     aiPath.canMove = true;
                     aiPath.maxSpeed = patrolSpeed;
                 }
@@ -300,7 +355,8 @@ public class EnemyAI : MonoBehaviour {
 
             case State.KnockedOut:
                 if (visionSweep != null) visionSweep.enabled = false;
-                if (aiPath != null) {
+                if (aiPath != null)
+                {
                     aiPath.canMove = false;
                     aiPath.destination = transform.position;
                 }
@@ -309,25 +365,54 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
-    public void KnockOut() {
+    public void KnockOut()
+    {
         if (state == State.KnockedOut) return;
         ChangeState(State.KnockedOut);
     }
 
     public bool IsKnockedOut => state == State.KnockedOut;
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         if (fieldOfView != null) fieldOfView.gameObject.SetActive(false);
     }
 
-    private void OnEnable() {
-        if (fieldOfView != null && state != State.KnockedOut) {
+    private void OnEnable()
+    {
+        if (fieldOfView != null && state != State.KnockedOut)
+        {
             fieldOfView.gameObject.SetActive(true);
         }
     }
 
-    private void OnDrawGizmosSelected() {
+    private void OnDrawGizmosSelected()
+    {
         Gizmos.color = new Color(1f, 0.6f, 0.2f, 0.4f);
         Gizmos.DrawWireSphere(transform.position, hearingRadius);
     }
+
+    //--Level 5 DarkMode
+    public void SetDarkMode(bool isDark)
+    {
+        darkMode = isDark;
+        ApplyCurrentSpeed();
+    }
+
+    private void ApplyCurrentSpeed()
+    {
+        if (aiPath == null) return;
+        switch (state)
+        {
+            case State.Alert:
+                aiPath.maxSpeed = EffectiveChaseSpeed;
+                break;
+            case State.Patrol:
+            case State.Search:
+            case State.Suspicious:
+                aiPath.maxSpeed = EffectivePatrolSpeed;
+                break;
+        }
+    }
+    //--Level 5 DarkMode
 }

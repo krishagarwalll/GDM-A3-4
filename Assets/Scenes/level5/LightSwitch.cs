@@ -8,8 +8,6 @@ public class LightSwitch : MonoBehaviour, IInteractable
     [SerializeField] float darkIntensity = 0.002f;
     [SerializeField] float normalIntensity = 1f;
 
-    bool isLimitMode = true; 
-
     void Start()
     {
         globalLight.intensity = darkIntensity;
@@ -18,22 +16,25 @@ public class LightSwitch : MonoBehaviour, IInteractable
 
     public string GetInteractiveText()
     {
-        return isLimitMode ? "Press E turn on" : "Press E turn off";
+        bool lightOn = Level5GameController.Instance != null && Level5GameController.Instance.IsLightOn;
+        return lightOn ? "Press E turn off" : "Press E turn on";
     }
 
     public void Interact()
     {
-        isLimitMode = !isLimitMode;
+        bool newState = Level5GameController.Instance == null || !Level5GameController.Instance.IsLightOn;
 
-        if (isLimitMode)
-        {
-            globalLight.intensity = darkIntensity;
-            playerSpotLight.enabled = true;
-        }
-        else
+        if (newState)
         {
             globalLight.intensity = normalIntensity;
             playerSpotLight.enabled = false;
         }
+        else
+        {
+            globalLight.intensity = darkIntensity;
+            playerSpotLight.enabled = true;
+        }
+
+        Level5GameController.Instance?.SetLightState(newState);
     }
 }
