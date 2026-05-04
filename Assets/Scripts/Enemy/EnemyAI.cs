@@ -1,5 +1,6 @@
 using Pathfinding;
 using UnityEngine;
+using Game.Core.Pause;
 
 public enum GuardType {
     Static,
@@ -77,6 +78,7 @@ public class EnemyAI : MonoBehaviour {
     }
 
     private void Update() {
+        if (PauseService.IsPaused) return;
         if (state == State.KnockedOut) return;
 
         UpdateFacing();

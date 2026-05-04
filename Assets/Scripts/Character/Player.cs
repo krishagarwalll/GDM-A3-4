@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Game.Core.Pause;
 
 public class Player : MonoBehaviour {
 
@@ -31,6 +32,12 @@ public class Player : MonoBehaviour {
     }
 
     private void Update() {
+        if (PauseService.IsPaused) {
+            moveDir = Vector3.zero;
+            if (animator != null) animator.SetBool("isRunning", false);
+            return;
+        }
+
         HandleCrouchToggle();
 
         float moveX = 0f;

@@ -167,6 +167,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &128202371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 128202373}
+  - component: {fileID: 128202372}
+  m_Layer: 0
+  m_Name: PauseController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &128202372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128202371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6ef9a3310d54063aa5450212d97810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Pause.PauseController
+  toggleKey: 60
+  showPausePanel: {fileID: 11400000, guid: d37299566c5424ba08087787556a8086, type: 2}
+  hidePausePanel: {fileID: 11400000, guid: af8e7ee7637804122a909e735ff3539d, type: 2}
+  lockChannels:
+  - {fileID: 11400000, guid: ce6359bb8fb43664ea94c06d5f985096, type: 2}
+  - {fileID: 11400000, guid: 06b8366c426a2b446b0e0ce9f029b4a3, type: 2}
+  - {fileID: 11400000, guid: 59d927eae947eee449e4095b58fc09ca, type: 2}
+  unlockChannels:
+  - {fileID: 11400000, guid: 156873e12cffd3441a7b2b8a03bcb78e, type: 2}
+--- !u!4 &128202373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128202371}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1133047603
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,3 +385,4 @@ SceneRoots:
   - {fileID: 1133047604}
   - {fileID: 2075299839}
   - {fileID: 99585194}
+  - {fileID: 128202373}
