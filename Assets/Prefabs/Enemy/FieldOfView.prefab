@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 666229478712982041}
   - component: {fileID: 3227803826899911991}
   - component: {fileID: 7288466751923027754}
+  - component: {fileID: 8604405263877517010}
   m_Layer: 0
   m_Name: FieldOfView
   m_TagString: Untagged
@@ -105,8 +106,23 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: 1021995573
+  m_SortingLayer: 3
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8604405263877517010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840037978776753453}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d10e23670b8162a489e32b9410e8c843, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VisionSweep
+  sweepAngle: 90
+  sweepPeriod: 4
+  baseDirection: {x: 1, y: 0}

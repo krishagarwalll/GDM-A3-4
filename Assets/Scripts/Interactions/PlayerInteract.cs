@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Game.Core.Pause;
 
 public class PlayerInteract : MonoBehaviour
 {
@@ -8,7 +9,9 @@ public class PlayerInteract : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.eKey.wasPressedThisFrame) 
+        if (PauseService.IsPaused) return;
+
+        if (Keyboard.current.eKey.wasPressedThisFrame)
         {
             IInteractable interactable = GetInteractableObject();
             if (interactable != null)
