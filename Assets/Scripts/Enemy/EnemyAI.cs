@@ -1,15 +1,59 @@
-using System;
 using Pathfinding;
 using UnityEngine;
 
+public enum GuardType {
+    Static,
+    Patrolling
+}
+
 public class EnemyAI : MonoBehaviour {
+
+    [Header("Type")]
+    [SerializeField] private GuardType guardType = GuardType.Patrolling;
+
+    [Header("References")]
     [SerializeField] private Transform pfFieldOfView;
     [SerializeField] private Patroller patroller;
-    [SerializeField, Range(1f, 20f)] private float moveSpeed = 3f;
-    [SerializeField, Range(1f, 20f)] private float targetRange = 10f;
+
+    [Header("Movement")]
+    [SerializeField, Range(1f, 20f)] private float patrolSpeed = 3f;
+    [SerializeField, Range(1f, 20f)] private float chaseSpeed = 4.5f;
+    [Tooltip("Static guards will not chase further than this radius from their post.")]
+    [SerializeField, Range(0f, 30f)] private float chaseLeashRadius = 5f;
+
+    [Header("Detection Timings")]
+    [Tooltip("Seconds the guard hesitates after first spotting the player before going Alert.")]
+    [SerializeField, Range(0f, 5f)] private float suspicionDelay = 1.5f;
+    [Tooltip("Seconds the guard searches the last known position before giving up.")]
+    [SerializeField, Range(0.5f, 10f)] private float searchDuration = 4f;
+    [Tooltip("Seconds the guard keeps chasing after losing line of sight.")]
+    [SerializeField, Range(0.5f, 10f)] private float lostSightDelay = 1.5f;
+
+    [Header("Crouch Detection")]
+    [SerializeField] private bool reduceVisionForCrouchedPlayer = true;
+    [SerializeField, Range(0.1f, 1f)] private float crouchedDetectionMultiplier = 0.6f;
+
+    [Header("Hearing")]
+    [Tooltip("Guard is alerted by an audible non-crouched moving player within this radius.")]
+    [SerializeField, Range(0f, 15f)] private float hearingRadius = 7f;
+    [Tooltip("Seconds of continuous noise before the guard starts reacting.")]
+    [SerializeField, Range(0f, 5f)] private float hearingThreshold = 0.5f;
+    [Tooltip("How fast the guard rotates toward heard noise (degrees per second).")]
+    [SerializeField, Range(30f, 720f)] private float hearingTurnSpeed = 180f;
+    [Tooltip("How fast accumulated noise drains while the player is silent (per second).")]
+    [SerializeField, Range(0.1f, 5f)] private float hearingDecayRate = 1f;
+
     private FieldOfView fieldOfView;
+    private VisionSweep visionSweep;
     private AIPath aiPath;
     private Vector3 lastMoveDirection = Vector3.right;
+    private Vector3 homePosition;
+    private Vector3 lastKnownPlayerPos;
+    private State state;
+    private float stateTimer;
+    private float noiseLevel;
+    private Vector3 heardNoisePos;
+    private bool IsHearingActive => noiseLevel >= hearingThreshold;
 
     private enum State {
         Patrol,
@@ -19,41 +63,136 @@ public class EnemyAI : MonoBehaviour {
         KnockedOut
     }
 
-    private State state;
-    
     private void Start() {
-        fieldOfView = Instantiate(pfFieldOfView, null).GetComponent<FieldOfView>();
+        homePosition = transform.position;
+
+        var fovInstance = Instantiate(pfFieldOfView, null);
+        fieldOfView = fovInstance.GetComponent<FieldOfView>();
+        visionSweep = fovInstance.GetComponent<VisionSweep>();
+
         aiPath = GetComponent<AIPath>();
-        if (aiPath != null) {
-            aiPath.maxSpeed = moveSpeed;
-        }
+        if (aiPath != null) aiPath.maxSpeed = patrolSpeed;
+
+        EnterState(State.Patrol);
     }
 
     private void Update() {
+        if (state == State.KnockedOut) return;
+
         UpdateFacing();
-        fieldOfView.SetOrigin(transform.position);
-        fieldOfView.SetAimDirection(lastMoveDirection);
-        
+        UpdateHearing();
+        if (fieldOfView != null) fieldOfView.SetOrigin(transform.position);
+
         switch (state) {
-            case State.Patrol:
-                PatrolUpdate();
-                break;
-            case State.Suspicious:
-                break;
-            case State.Alert:
-                break;
-            case State.Search:
-                break;
-            case State.KnockedOut:
-                break;
+            case State.Patrol:     PatrolUpdate(); break;
+            case State.Suspicious: SuspiciousUpdate(); break;
+            case State.Alert:      AlertUpdate(); break;
+            case State.Search:     SearchUpdate(); break;
+        }
+
+        bool sweepDriving = visionSweep != null && visionSweep.enabled;
+        if (fieldOfView != null && !sweepDriving) {
+            fieldOfView.SetAimDirection(lastMoveDirection);
         }
     }
 
+    // --- States ---
+
     private void PatrolUpdate() {
+        if (IsHearingActive) {
+            if (aiPath != null) aiPath.canMove = false;
+            if (visionSweep != null) visionSweep.enabled = false;
+            TurnTowards(heardNoisePos);
+        } else {
+            Vector3 naturalDir = GetNaturalPatrolDirection();
+            bool aligned = Vector3.Angle(lastMoveDirection, naturalDir) <= 1f;
+
+            if (!aligned) {
+                if (aiPath != null) aiPath.canMove = false;
+                if (visionSweep != null) visionSweep.enabled = false;
+                TurnTowardsDir(naturalDir);
+            } else {
+                if (aiPath != null && !aiPath.canMove) aiPath.canMove = true;
+                if (visionSweep != null && !visionSweep.enabled && guardType == GuardType.Static)
+                    visionSweep.enabled = true;
+                DriveAlongPatroller();
+            }
+        }
+
+        if (CanSeePlayer()) {
+            lastKnownPlayerPos = Player.Instance.GetPosition;
+            ChangeState(State.Suspicious);
+        }
+    }
+
+    private Vector3 GetNaturalPatrolDirection() {
+        if (guardType == GuardType.Static && visionSweep != null) {
+            return visionSweep.GetCurrentSweepDirection();
+        }
+        if (patroller != null && patroller.IsReady()) {
+            Vector3 to = patroller.GetTarget() - transform.position;
+            if (to.sqrMagnitude > 0.0001f) return to.normalized;
+        }
+        return lastMoveDirection;
+    }
+
+    private void SuspiciousUpdate() {
+        AimAt(lastKnownPlayerPos);
+        if (CanSeePlayer()) lastKnownPlayerPos = Player.Instance.GetPosition;
+        else if (IsHearingActive) lastKnownPlayerPos = heardNoisePos;
+
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f) {
+            ChangeState(CanSeePlayer() ? State.Alert : State.Search);
+        }
+    }
+
+    private void AlertUpdate() {
+        bool sees = CanSeePlayer();
+        if (sees) {
+            lastKnownPlayerPos = Player.Instance.GetPosition;
+            stateTimer = lostSightDelay;
+        } else if (IsHearingActive) {
+            lastKnownPlayerPos = heardNoisePos;
+            stateTimer = lostSightDelay;
+        } else {
+            stateTimer -= Time.deltaTime;
+        }
+
+        if (aiPath != null) {
+            aiPath.destination = ClampToLeash(lastKnownPlayerPos);
+        }
+
+        if (!sees && stateTimer <= 0f) {
+            ChangeState(State.Search);
+        }
+    }
+
+    private void SearchUpdate() {
+        if (CanSeePlayer()) {
+            lastKnownPlayerPos = Player.Instance.GetPosition;
+            ChangeState(State.Alert);
+            return;
+        }
+
+        if (IsHearingActive) lastKnownPlayerPos = heardNoisePos;
+
+        if (aiPath != null) {
+            aiPath.destination = ClampToLeash(lastKnownPlayerPos);
+        }
+
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f) {
+            ChangeState(State.Patrol);
+        }
+    }
+
+    // --- Helpers ---
+
+    private void DriveAlongPatroller() {
         if (patroller == null || !patroller.IsReady() || aiPath == null) return;
 
         aiPath.destination = patroller.GetTarget();
-
         if (aiPath.pathPending) return;
 
         bool pathDone = aiPath.hasPath && aiPath.reachedEndOfPath;
@@ -64,28 +203,129 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
+    private bool CanSeePlayer() {
+        if (fieldOfView == null || Player.Instance == null) return false;
+        float mult = (reduceVisionForCrouchedPlayer && Player.Instance.IsCrouching)
+            ? crouchedDetectionMultiplier : 1f;
+        return fieldOfView.IsTargetVisible(Player.Instance.GetPosition, mult);
+    }
+
+    private void UpdateHearing() {
+        bool audible = Player.Instance != null
+            && !Player.Instance.IsCrouching
+            && Player.Instance.IsMoving
+            && Vector3.Distance(transform.position, Player.Instance.GetPosition) <= hearingRadius;
+
+        if (audible) {
+            heardNoisePos = Player.Instance.GetPosition;
+            noiseLevel = Mathf.Min(noiseLevel + Time.deltaTime, hearingThreshold + 1f);
+        } else {
+            noiseLevel = Mathf.Max(noiseLevel - Time.deltaTime * hearingDecayRate, 0f);
+        }
+    }
+
+    private void TurnTowards(Vector3 worldPoint) {
+        TurnTowardsDir(worldPoint - transform.position);
+    }
+
+    private void TurnTowardsDir(Vector3 dir) {
+        if (dir.sqrMagnitude < 0.0001f) return;
+        dir.Normalize();
+        float maxRad = hearingTurnSpeed * Mathf.Deg2Rad * Time.deltaTime;
+        lastMoveDirection = Vector3.RotateTowards(lastMoveDirection, dir, maxRad, 0f);
+    }
+
+    private Vector3 ClampToLeash(Vector3 target) {
+        if (guardType != GuardType.Static) return target;
+        Vector3 fromHome = target - homePosition;
+        if (fromHome.sqrMagnitude <= chaseLeashRadius * chaseLeashRadius) return target;
+        return homePosition + fromHome.normalized * chaseLeashRadius;
+    }
+
+    private void AimAt(Vector3 worldPoint) {
+        Vector3 dir = worldPoint - transform.position;
+        if (dir.sqrMagnitude > 0.0001f) lastMoveDirection = dir.normalized;
+    }
+
     private void UpdateFacing() {
         if (aiPath != null && aiPath.velocity.sqrMagnitude > 0.01f) {
             lastMoveDirection = ((Vector3)aiPath.velocity).normalized;
         }
     }
 
-    private void ChangeState(State newState)
-    {
-        //Todo
+    // --- Transitions ---
+
+    private void ChangeState(State newState) {
+        if (state == newState) return;
+        state = newState;
+        EnterState(newState);
     }
 
-    private void FindTarget() {
-        if (Vector3.Distance(transform.position, Player.Instance.GetPosition) < targetRange) {
-            //Player is in range
+    private void EnterState(State s) {
+        switch (s) {
+            case State.Patrol:
+                if (visionSweep != null) visionSweep.enabled = (guardType == GuardType.Static);
+                if (aiPath != null) {
+                    aiPath.canMove = true;
+                    aiPath.maxSpeed = patrolSpeed;
+                }
+                stateTimer = 0f;
+                break;
+
+            case State.Suspicious:
+                if (visionSweep != null) visionSweep.enabled = false;
+                if (aiPath != null) aiPath.canMove = false;
+                stateTimer = suspicionDelay;
+                break;
+
+            case State.Alert:
+                if (visionSweep != null) visionSweep.enabled = false;
+                if (aiPath != null) {
+                    aiPath.canMove = true;
+                    aiPath.maxSpeed = chaseSpeed;
+                }
+                stateTimer = lostSightDelay;
+                break;
+
+            case State.Search:
+                if (visionSweep != null) visionSweep.enabled = false;
+                if (aiPath != null) {
+                    aiPath.canMove = true;
+                    aiPath.maxSpeed = patrolSpeed;
+                }
+                stateTimer = searchDuration;
+                break;
+
+            case State.KnockedOut:
+                if (visionSweep != null) visionSweep.enabled = false;
+                if (aiPath != null) {
+                    aiPath.canMove = false;
+                    aiPath.destination = transform.position;
+                }
+                if (fieldOfView != null) fieldOfView.gameObject.SetActive(false);
+                break;
         }
     }
+
+    public void KnockOut() {
+        if (state == State.KnockedOut) return;
+        ChangeState(State.KnockedOut);
+    }
+
+    public bool IsKnockedOut => state == State.KnockedOut;
 
     private void OnDisable() {
         if (fieldOfView != null) fieldOfView.gameObject.SetActive(false);
     }
 
     private void OnEnable() {
-        if (fieldOfView != null) fieldOfView.gameObject.SetActive(true);
+        if (fieldOfView != null && state != State.KnockedOut) {
+            fieldOfView.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = new Color(1f, 0.6f, 0.2f, 0.4f);
+        Gizmos.DrawWireSphere(transform.position, hearingRadius);
     }
 }

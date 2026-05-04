@@ -72,21 +72,26 @@ public class FieldOfView : MonoBehaviour {
     {
         if (spotted) return;
         if (Player.Instance == null) return;
-
-        Vector3 playerPos = Player.Instance.GetPosition;
-        Vector3 toPlayer = playerPos - origin;
-        float dist = toPlayer.magnitude;
-        if (dist > viewDistance) return;
-
-        Vector3 aim = Utils.GetVectorFromAngle(startingAngle - fov / 2f);
-        if (Vector3.Angle(aim, toPlayer.normalized) > fov / 2f) return;
-
-        var hit = Physics2D.Raycast(origin, toPlayer.normalized, dist, layerMask);
-        if (hit.collider != null) return;
+        if (!IsTargetVisible(Player.Instance.GetPosition)) return;
 
         spotted = true;
         onPlayerSpotted?.Raise();
     }
+
+    public bool IsTargetVisible(Vector3 target, float distanceMultiplier = 1f) {
+        Vector3 toTarget = target - origin;
+        float dist = toTarget.magnitude;
+        float effectiveRange = viewDistance * distanceMultiplier;
+        if (dist > effectiveRange || dist < 0.0001f) return false;
+
+        Vector3 aim = Utils.GetVectorFromAngle(startingAngle - fov / 2f);
+        if (Vector3.Angle(aim, toTarget.normalized) > fov / 2f) return false;
+
+        var hit = Physics2D.Raycast(origin, toTarget.normalized, dist, layerMask);
+        return hit.collider == null;
+    }
+
+    public float GetViewDistance() => viewDistance;
 
     private void OnDisable()
     {
