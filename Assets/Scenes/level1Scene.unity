@@ -20402,87 +20402,17 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!1 &2118933441
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2118933445}
-  - component: {fileID: 2118933444}
-  - component: {fileID: 2118933443}
-  - component: {fileID: 2118933442}
-  m_Layer: 0
-  m_Name: LevelManagement
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2118933442
+--- !u!114 &2118933442 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 6285879816075184001, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+  m_PrefabInstance: {fileID: 711719034275136478}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2118933441}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 876e068a0452b7742b28d207b928ee2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.ObjectiveTracker
-  requiredCount: 1
-  onObjectiveProgress: {fileID: 11400000, guid: e1481ce4795fc474ab0d366bbb378431, type: 2}
-  onCountChanged: {fileID: 11400000, guid: 0a58f2b52a2163147bbf1481961fc9fa, type: 2}
-  onComplete: {fileID: 11400000, guid: 2256c5fdb53d77b4ea0cc362b1172c71, type: 2}
---- !u!114 &2118933443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2118933441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94e9db59075ad7c42afa1ccd58130f26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.GameTimer
-  durationSeconds: 5
-  autoStart: 1
-  onTick: {fileID: 11400000, guid: 9b68b42a2fe0de64a8d22223035ef026, type: 2}
-  onTimeUp: {fileID: 11400000, guid: 59d927eae947eee449e4095b58fc09ca, type: 2}
---- !u!114 &2118933444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2118933441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9647410214ae1434e97999ee66f0c029, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.LevelStarter
-  levelData: {fileID: 11400000, guid: 2edb2c7132af4e74dbc242504f5e3e84, type: 2}
-  timer: {fileID: 2118933443}
-  objectiveTracker: {fileID: 2118933442}
---- !u!4 &2118933445
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2118933441}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2136514940
 GameObject:
   m_ObjectHideFlags: 0
@@ -20746,6 +20676,63 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!1001 &711719034275136478
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 714102192077846201, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1110451485075942681, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
+      propertyPath: m_Name
+      value: LevelManagement
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7d208b56cdf2f4a569400231d5ba9716, type: 3}
 --- !u!1001 &6119390150818688962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20822,4 +20809,4 @@ SceneRoots:
   - {fileID: 1772393284}
   - {fileID: 1857271684}
   - {fileID: 1490306062}
-  - {fileID: 2118933445}
+  - {fileID: 711719034275136478}
