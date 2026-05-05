@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 35725015}
   - component: {fileID: 35725014}
   - component: {fileID: 35725016}
+  - component: {fileID: 35725017}
   m_Layer: 0
   m_Name: Gamble
   m_TagString: Untagged
@@ -783,6 +784,22 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!111 &35725017
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35725012}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1001 &52377659
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15244,7 +15261,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3277976363152627634, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: hearingRadius
-      value: 4.48
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4112347231431922014, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15334,6 +15351,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1074928756}
+  - {fileID: 1131089100}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &803517804
@@ -15478,6 +15496,7 @@ GameObject:
   - component: {fileID: 894753623}
   - component: {fileID: 894753622}
   - component: {fileID: 894753621}
+  - component: {fileID: 894753628}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -15680,6 +15699,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &894753628
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894753620}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &956075012
 GameObject:
   m_ObjectHideFlags: 0
@@ -15723,7 +15758,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3277976363152627634, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: hearingRadius
-      value: 4.48
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4112347231431922014, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15828,7 +15863,7 @@ GameObject:
   - component: {fileID: 1074928757}
   - component: {fileID: 1074928758}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: Casino
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15904,7 +15939,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3277976363152627634, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: hearingRadius
-      value: 4.48
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4112347231431922014, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15964,6 +15999,75 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4112347231431922014, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
   m_PrefabInstance: {fileID: 1080912950}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1131089099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1131089100}
+  - component: {fileID: 1131089102}
+  - component: {fileID: 1131089101}
+  m_Layer: 0
+  m_Name: Objectives
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1131089100
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131089099}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 31.42, y: 2.8, z: 43.89136}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 722892715}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1131089101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131089099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bb9acb2cffc5f45abddc238a0ad9b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.GridInformation
+  m_PositionIntKeys: []
+  m_PositionIntValues: 
+  m_PositionStringKeys: []
+  m_PositionStringValues: []
+  m_PositionFloatKeys: []
+  m_PositionFloatValues: []
+  m_PositionDoubleKeys: []
+  m_PositionDoubleValues: []
+  m_PositionObjectKeys: []
+  m_PositionObjectValues: []
+  m_PositionColorKeys: []
+  m_PositionColorValues: []
+--- !u!156049354 &1131089102
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131089099}
+  m_Enabled: 1
+  m_CellSize: {x: 1, y: 1, z: 1}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
 --- !u!1 &1155880550
 GameObject:
   m_ObjectHideFlags: 0
@@ -31024,7 +31128,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3277976363152627634, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: hearingRadius
-      value: 4.48
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4112347231431922014, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -31094,7 +31198,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3277976363152627634, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: hearingRadius
-      value: 4.48
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4112347231431922014, guid: 2e0b278ae4ce92a4da3ce1894135569c, type: 3}
       propertyPath: m_LocalPosition.x
