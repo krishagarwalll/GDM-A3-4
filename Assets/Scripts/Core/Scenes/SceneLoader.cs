@@ -17,8 +17,14 @@ namespace Game.Core.Scenes
         [Header("Hotkeys")]
         [SerializeField] private bool reloadOnRKey = true;
 
+        [Header("Transition")]
+        [Tooltip("Optional. If null, falls back to SceneTransition.Instance.")]
+        [SerializeField] private SceneTransition transition;
+
         private GameSceneSO _currentScene;
         private bool _isLoading;
+
+        private SceneTransition Transition => transition != null ? transition : SceneTransition.Instance;
 
         private void OnEnable()
         {
@@ -59,15 +65,24 @@ namespace Game.Core.Scenes
         {
             _isLoading = true;
 
-            if (_currentScene != null && _currentScene != target)
+            var t = Transition;
+            if (t != null)
+                yield return t.RunBetween(SwapScenes(target));
+            else
+                yield return SwapScenes(target);
+
+            _currentScene = target;
+            _isLoading = false;
+
+            if (onSceneLoaded != null)
+                onSceneLoaded.Raise();
+        }
+
+        private IEnumerator SwapScenes(GameSceneSO target)
+        {
+            if (_currentScene != null)
             {
                 var loaded = SceneManager.GetSceneByName(_currentScene.sceneName);
-                if (loaded.IsValid() && loaded.isLoaded)
-                    yield return SceneManager.UnloadSceneAsync(loaded);
-            }
-            else if (_currentScene == target)
-            {
-                var loaded = SceneManager.GetSceneByName(target.sceneName);
                 if (loaded.IsValid() && loaded.isLoaded)
                     yield return SceneManager.UnloadSceneAsync(loaded);
             }
@@ -78,12 +93,6 @@ namespace Game.Core.Scenes
             var newScene = SceneManager.GetSceneByName(target.sceneName);
             if (newScene.IsValid())
                 SceneManager.SetActiveScene(newScene);
-
-            _currentScene = target;
-            _isLoading = false;
-
-            if (onSceneLoaded != null)
-                onSceneLoaded.Raise();
         }
     }
 }

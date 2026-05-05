@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
     public static Player Instance { get; private set; }
 
     private const float MOVE_SPEED = 6f;
-    private const float CROUCH_SPEED_MULTIPLIER = 0.5f;
+    private const float CROUCH_SPEED_MULTIPLIER = 0.35f;
 
     [Header("Crouch")]
     [SerializeField] private Key crouchToggleKey = Key.C;
@@ -71,17 +71,7 @@ public class Player : MonoBehaviour {
         if (Keyboard.current == null) return;
         if (Keyboard.current[crouchToggleKey].wasPressedThisFrame) {
             isCrouching = !isCrouching;
-            if (animator != null && HasAnimatorParameter("isCrouching")) {
-                animator.SetBool("isCrouching", isCrouching);
-            }
+            if (animator != null) animator.SetBool("isCrouched", isCrouching);
         }
-    }
-
-    private bool HasAnimatorParameter(string paramName) {
-        var ps = animator.parameters;
-        for (int i = 0; i < ps.Length; i++) {
-            if (ps[i].name == paramName) return true;
-        }
-        return false;
     }
 }
