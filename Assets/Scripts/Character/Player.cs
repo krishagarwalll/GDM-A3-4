@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
     private Rigidbody2D rb;
     private Animator animator;
     private Vector3 moveDir;
+    private Vector3 baseLocalScale;
     private bool isCrouching;
 
     public bool IsCrouching => isCrouching;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour {
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        baseLocalScale = transform.localScale;
     }
 
     private void OnDestroy() {
@@ -54,9 +56,9 @@ public class Player : MonoBehaviour {
         animator.SetBool("isRunning", isMoving);
 
         if (moveX > 0) {
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(Mathf.Abs(baseLocalScale.x), baseLocalScale.y, baseLocalScale.z);
         } else if (moveX < 0) {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(-Mathf.Abs(baseLocalScale.x), baseLocalScale.y, baseLocalScale.z);
         }
     }
 
