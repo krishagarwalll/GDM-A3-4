@@ -7,6 +7,13 @@ public enum GuardType {
     Patrolling
 }
 
+public enum GuardFacing {
+    Right,
+    Up,
+    Left,
+    Down
+}
+
 public class EnemyAI : MonoBehaviour
 {
 
@@ -45,10 +52,15 @@ public class EnemyAI : MonoBehaviour
     [Tooltip("How fast accumulated noise drains while the player is silent (per second).")]
     [SerializeField, Range(0.1f, 5f)] private float hearingDecayRate = 1f;
 
+    [Header("Facing")]
+    [Tooltip("Initial facing for Static guards (and the centre of their FOV sweep). Ignored for Patrolling.")]
+    [SerializeField] private GuardFacing initialFacing = GuardFacing.Right;
+
     private FieldOfView fieldOfView;
     private VisionSweep visionSweep;
     private AIPath aiPath;
     private Vector3 lastMoveDirection = Vector3.right;
+    private Vector3 currentAimDirection;
     private Vector3 homePosition;
     private Vector3 lastKnownPlayerPos;
     private State state;
@@ -71,9 +83,30 @@ public class EnemyAI : MonoBehaviour
         KnockedOut
     }
 
+    public Vector3 FacingDirection => currentAimDirection.sqrMagnitude > 0.0001f
+        ? currentAimDirection
+        : lastMoveDirection;
+
+    private static Vector3 FacingToVector(GuardFacing f)
+    {
+        switch (f)
+        {
+            case GuardFacing.Up:    return Vector3.up;
+            case GuardFacing.Left:  return Vector3.left;
+            case GuardFacing.Down:  return Vector3.down;
+            default:                return Vector3.right;
+        }
+    }
+
     private void Start()
     {
         homePosition = transform.position;
+
+        if (guardType == GuardType.Static)
+        {
+            lastMoveDirection = FacingToVector(initialFacing);
+        }
+        currentAimDirection = lastMoveDirection;
 
         var fovInstance = Instantiate(pfFieldOfView, null);
         fieldOfView = fovInstance.GetComponent<FieldOfView>();
@@ -103,9 +136,14 @@ public class EnemyAI : MonoBehaviour
         }
 
         bool sweepDriving = visionSweep != null && visionSweep.enabled;
-        if (fieldOfView != null && !sweepDriving)
+        if (sweepDriving)
         {
-            fieldOfView.SetAimDirection(lastMoveDirection);
+            currentAimDirection = visionSweep.GetCurrentSweepDirection();
+        }
+        else
+        {
+            if (fieldOfView != null) fieldOfView.SetAimDirection(lastMoveDirection);
+            currentAimDirection = lastMoveDirection;
         }
     }
 
@@ -119,24 +157,21 @@ public class EnemyAI : MonoBehaviour
             if (visionSweep != null) visionSweep.enabled = false;
             TurnTowards(heardNoisePos);
         }
+        else if (guardType == GuardType.Static)
+        {
+            // Static guard: stay put; lastMoveDirection follows the slow sweep
+            // direction so the FOV cone, sprite and (disabled) movement all face
+            // the same way.
+            if (aiPath != null) aiPath.canMove = false;
+            if (visionSweep != null && !visionSweep.enabled) visionSweep.enabled = true;
+            TurnTowardsDir(GetNaturalPatrolDirection());
+        }
         else
         {
-            Vector3 naturalDir = GetNaturalPatrolDirection();
-            bool aligned = Vector3.Angle(lastMoveDirection, naturalDir) <= 1f;
-
-            if (!aligned)
-            {
-                if (aiPath != null) aiPath.canMove = false;
-                if (visionSweep != null) visionSweep.enabled = false;
-                TurnTowardsDir(naturalDir);
-            }
-            else
-            {
-                if (aiPath != null && !aiPath.canMove) aiPath.canMove = true;
-                if (visionSweep != null && !visionSweep.enabled && guardType == GuardType.Static)
-                    visionSweep.enabled = true;
-                DriveAlongPatroller();
-            }
+            // Patrolling guard: just walk the route. AIPath handles steering;
+            // alignment gating here would deadlock against AIPath's velocity.
+            if (aiPath != null && !aiPath.canMove) aiPath.canMove = true;
+            DriveAlongPatroller();
         }
 
         if (CanSeePlayer())
@@ -318,7 +353,12 @@ public class EnemyAI : MonoBehaviour
         switch (s)
         {
             case State.Patrol:
-                if (visionSweep != null) visionSweep.enabled = (guardType == GuardType.Static);
+                if (visionSweep != null)
+                {
+                    visionSweep.enabled = (guardType == GuardType.Static);
+                    if (guardType == GuardType.Static)
+                        visionSweep.SetBaseDirection(lastMoveDirection);
+                }
                 if (aiPath != null)
                 {
                     aiPath.canMove = true;
