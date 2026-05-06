@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0489968b0de3c964eb8f0d6716a59c81, type: 3}
   m_Name: Scene_Level3
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Scenes.GameSceneSO
-  sceneName: level3Scene
+  sceneName: level3
   displayName: Level 3
   sceneType: 1
