@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 4154954484264143567}
   - component: {fileID: 6982377306895084104}
   - component: {fileID: 7640450865703229288}
+  - component: {fileID: 4460743926389721720}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -309,3 +310,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4460743926389721720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701147362317898901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2545c967798442f47b2e69b8f9b68db5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFootsteps
+  stepInterval: 0.4
+  audibleRadius: 6

@@ -33,3 +33,6 @@ https://cazwolf.itch.io/pixel-slot-machine
 
 Menu Button Designs:
 https://www.vecteezy.com/members/kalebsilva
+
+Universal Sound FX:
+https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256

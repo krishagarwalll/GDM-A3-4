@@ -1,5 +1,6 @@
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Game.Core.Pause;
 
 public enum GuardType {
@@ -12,6 +13,11 @@ public enum GuardFacing {
     Up,
     Left,
     Down
+}
+
+public enum DistractionIntensity {
+    Footstep = 1,
+    Loud = 2
 }
 
 public class EnemyAI : MonoBehaviour
@@ -412,6 +418,35 @@ public class EnemyAI : MonoBehaviour
     }
 
     public bool IsKnockedOut => state == State.KnockedOut;
+
+    private static readonly string[] DistractionScenes = { "level1Scene", "level2Scene" };
+
+    private static bool IsDistractionScene()
+    {
+        string active = SceneManager.GetActiveScene().name;
+        for (int i = 0; i < DistractionScenes.Length; i++)
+        {
+            if (DistractionScenes[i] == active) return true;
+        }
+        return false;
+    }
+
+    public void OnDistraction(Vector3 worldPos, DistractionIntensity intensity)
+    {
+        if (!IsDistractionScene()) return;
+        if (state == State.KnockedOut || state == State.Alert) return;
+
+        if (intensity == DistractionIntensity.Footstep)
+        {
+            heardNoisePos = worldPos;
+            noiseLevel = hearingThreshold + 1f;
+        }
+        else
+        {
+            lastKnownPlayerPos = worldPos;
+            ChangeState(State.Search);
+        }
+    }
 
     private void OnDisable()
     {
