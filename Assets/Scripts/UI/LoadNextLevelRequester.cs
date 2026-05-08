@@ -8,16 +8,17 @@ namespace Game.UI
     public class LoadNextLevelRequester : MonoBehaviour
     {
         [SerializeField] private GameSceneEventChannelSO channel;
-        [SerializeField] private LevelDataSO levelData;
 
         private void Awake()
         {
+            var levelData = LevelStarter.CurrentLevelData;
             if (levelData == null || levelData.nextScene == null)
                 gameObject.SetActive(false);
         }
 
         public void Request()
         {
+            var levelData = LevelStarter.CurrentLevelData;
             if (channel == null || levelData == null || levelData.nextScene == null)
             {
                 Debug.LogError($"[LoadNextLevelRequester] '{name}' missing channel or levelData.nextScene.");
