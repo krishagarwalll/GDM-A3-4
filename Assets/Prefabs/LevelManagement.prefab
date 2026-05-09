@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9647410214ae1434e97999ee66f0c029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.LevelStarter
-  levelData: {fileID: 11400000, guid: 2edb2c7132af4e74dbc242504f5e3e84, type: 2}
+  levelData: {fileID: 11400000, guid: 6c7d744eab0fa9c40b6477bbf43287b3, type: 2}
   timer: {fileID: 858554030534609133}
   objectiveTracker: {fileID: 6285879816075184001}
 --- !u!114 &858554030534609133

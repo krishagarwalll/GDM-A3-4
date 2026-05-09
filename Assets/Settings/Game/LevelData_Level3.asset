@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.LevelDataSO
   displayName: Level 3
   objectiveLabel: Treasure
-  durationSeconds: 160
+  durationSeconds: 180
   objectiveCount: 3
   currentScene: {fileID: 11400000, guid: b22ff737943449c4997f2142ab9cfcbc, type: 2}
   nextScene: {fileID: 0}
