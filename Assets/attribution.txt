@@ -36,3 +36,6 @@ https://www.vecteezy.com/members/kalebsilva
 
 Universal Sound FX:
 https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256
+
+Lock Picking Mechanic:
+https://80.lv/articles/tutorial-making-skyrim-s-lock-picking-mechanic-in-unity
