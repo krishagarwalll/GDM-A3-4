@@ -5,7 +5,7 @@ using Game.Core.Pause;
 [RequireComponent(typeof(Player))]
 public class PlayerFootsteps : MonoBehaviour
 {
-    private static readonly string[] FootstepScenes = { "level1Scene", "level2Scene" };
+    private static readonly string[] FootstepScenes = { "level1Scene", "level2Scene", "level3" };
 
     [Header("Emission")]
     [Tooltip("Seconds between footstep distractions while moving uncrouched.")]

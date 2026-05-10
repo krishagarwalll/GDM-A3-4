@@ -3,24 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Game.Core.Pause;
 
-public enum GuardType {
-    Static,
-    Patrolling
-}
-
-public enum GuardFacing {
-    Right,
-    Up,
-    Left,
-    Down
-}
-
-public enum DistractionIntensity {
-    Footstep = 1,
-    Loud = 2
-}
-
-public class EnemyAI : MonoBehaviour
+public class CameraEnemy : MonoBehaviour
 {
 
     [Header("Type")]
@@ -294,20 +277,7 @@ public class EnemyAI : MonoBehaviour
 
     private void UpdateHearing()
     {
-        bool audible = Player.Instance != null
-            && !Player.Instance.IsCrouching
-            && Player.Instance.IsMoving
-            && Vector3.Distance(transform.position, Player.Instance.GetPosition) <= hearingRadius;
-
-        if (audible)
-        {
-            heardNoisePos = Player.Instance.GetPosition;
-            noiseLevel = Mathf.Min(noiseLevel + Time.deltaTime, hearingThreshold + 1f);
-        }
-        else
-        {
-            noiseLevel = Mathf.Max(noiseLevel - Time.deltaTime * hearingDecayRate, 0f);
-        }
+        
     }
 
     private void TurnTowards(Vector3 worldPoint)
@@ -339,8 +309,6 @@ public class EnemyAI : MonoBehaviour
 
     private void UpdateFacing()
     {
-        if (state != State.Patrol) return;
-        if (IsHearingActive) return;
         if (aiPath != null && aiPath.velocity.sqrMagnitude > 0.01f)
         {
             lastMoveDirection = ((Vector3)aiPath.velocity).normalized;
@@ -421,7 +389,7 @@ public class EnemyAI : MonoBehaviour
 
     public bool IsKnockedOut => state == State.KnockedOut;
 
-    private static readonly string[] DistractionScenes = { "level1Scene", "level2Scene", "level3" };
+    private static readonly string[] DistractionScenes = { "level1Scene", "level2Scene" };
 
     private static bool IsDistractionScene()
     {
