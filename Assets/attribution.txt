@@ -33,3 +33,12 @@ https://cazwolf.itch.io/pixel-slot-machine
 
 Menu Button Designs:
 https://www.vecteezy.com/members/kalebsilva
+
+Universal Sound FX:
+https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256
+
+Lock Picking Mechanic:
+https://80.lv/articles/tutorial-making-skyrim-s-lock-picking-mechanic-in-unity
+
+Camera Sprite:
+https://www.vecteezy.com/vector-art/68597891-cctv-ceiling-security-camera-pixel-8-bit-styled-illustration-for-game-or-social-media-decoration-isolated-on-square-white-background 

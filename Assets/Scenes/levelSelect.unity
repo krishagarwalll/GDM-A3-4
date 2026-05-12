@@ -230,7 +230,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 14.9}
+  m_AnchoredPosition: {x: 0, y: 14.900024}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &328708034
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LoadSceneRequester
   channel: {fileID: 11400000, guid: 9319552e03f19f7439a81d53e4600952, type: 2}
-  scene: {fileID: 0}
+  scene: {fileID: 11400000, guid: 5e89ffdaa9d1593409fb63fd9e78b957, type: 2}
 --- !u!1 &1242398772
 GameObject:
   m_ObjectHideFlags: 0
