@@ -1078,7 +1078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LoadSceneRequester
   channel: {fileID: 11400000, guid: 9319552e03f19f7439a81d53e4600952, type: 2}
-  scene: {fileID: 0}
+  scene: {fileID: 11400000, guid: ed6d5c3e9710262448c3ecb9dbeb4148, type: 2}
 --- !u!1 &1135907227
 GameObject:
   m_ObjectHideFlags: 0
