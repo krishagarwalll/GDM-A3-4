@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9550e1d040c143e4b889047dce85393a, type: 3}
   m_Name: LevelData_Level1
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.LevelDataSO
-  displayName: Level 5
-  objectiveLabel: Test samples
+  displayName: Level 1
+  objectiveLabel: Paintings
   durationSeconds: 120
-  objectiveCount: 1
-  currentScene: {fileID: 11400000, guid: 8d72a4000afa26441bdba2b7dc6aacac, type: 2}
-  nextScene: {fileID: 11400000, guid: 868c71867e2677848a9d1860f3914aa0, type: 2}
+  objectiveCount: 3
+  currentScene: {fileID: 11400000, guid: a5afc3f4de8feb042af486a08298a8f6, type: 2}
+  nextScene: {fileID: 11400000, guid: 5e89ffdaa9d1593409fb63fd9e78b957, type: 2}
   mainMenuScene: {fileID: 11400000, guid: 7813af2e109bf3a4f80ff0bc62326438, type: 2}

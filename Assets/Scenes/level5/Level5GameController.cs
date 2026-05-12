@@ -7,19 +7,19 @@ public class Level5GameController : MonoBehaviour
 
     public bool IsLightOn { get; private set; } = false;
 
-        private void Awake()
+/*    private void Start()
+    {
+        if (Instance != null && Instance != this)
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
+            Destroy(gameObject);
+            return;
         }
-   
+        Instance = this;
+    }*/
+
     private IEnumerator Start()
     {
-        yield return null; 
+        yield return null; // 等一帧，确保所有 EnemyAI.Start() 都跑完
         NotifyAllEnemies();
     }
     public void SetLightState(bool lightOn)
