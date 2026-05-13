@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Audio.AudioManager
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}
-  musicVolume: 0.096
+  musicVolume: 0.254
   sfxVolume: 1
   defaultMusic: {fileID: 8300000, guid: 9ebc67f413627154b87a181360db33b8, type: 3}
   sfxClips:
