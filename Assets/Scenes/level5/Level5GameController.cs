@@ -19,7 +19,7 @@ public class Level5GameController : MonoBehaviour
 
     private IEnumerator Start()
     {
-        yield return null; // 等一帧，确保所有 EnemyAI.Start() 都跑完
+        yield return null;
         NotifyAllEnemies();
     }
     public void SetLightState(bool lightOn)

@@ -1,17 +1,26 @@
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+using Game.Core.Events;
 
-public class LightTurnOff : MonoBehaviour, IInteractable
+[DisallowMultipleComponent]
+public class CollectibleItem : MonoBehaviour, IInteractable
 {
-    [SerializeField] Light2D pointLight;
+    [Header("Text")]
+    [SerializeField] private string interactText = "Press E to collect";
+    [SerializeField] private string collectedText = "Already collected";
 
-    public string GetInteractiveText()
-    {
-        return pointLight.enabled ? "Press E Turn on" : "Press E Turn off";
-    }
+    [Header("Channels (output)")]
+    [SerializeField] private VoidEventChannelSO onCollected;
+
+    private bool _collected;
 
     public void Interact()
     {
-        pointLight.enabled = !pointLight.enabled;
+        if (_collected) return;
+        _collected = true;
+
+        onCollected?.Raise();
+        gameObject.SetActive(false);
     }
+
+    public string GetInteractiveText() => _collected ? collectedText : interactText;
 }
