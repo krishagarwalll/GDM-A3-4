@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: LevelData_Level2
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.LevelDataSO
   displayName: Level 2
-  objectiveLabel: Sabotage Slots
+  objectiveLabel: Get Money From Slots
   durationSeconds: 160
-  objectiveCount: 5
+  objectiveCount: 6
   currentScene: {fileID: 11400000, guid: 5e89ffdaa9d1593409fb63fd9e78b957, type: 2}
   nextScene: {fileID: 11400000, guid: b22ff737943449c4997f2142ab9cfcbc, type: 2}
   mainMenuScene: {fileID: 11400000, guid: 7813af2e109bf3a4f80ff0bc62326438, type: 2}
