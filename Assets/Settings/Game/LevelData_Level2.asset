@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Level 2
   objectiveLabel: Sabotage Slots
   durationSeconds: 160
-  objectiveCount: 3
+  objectiveCount: 5
   currentScene: {fileID: 11400000, guid: 5e89ffdaa9d1593409fb63fd9e78b957, type: 2}
   nextScene: {fileID: 11400000, guid: b22ff737943449c4997f2142ab9cfcbc, type: 2}
   mainMenuScene: {fileID: 11400000, guid: 7813af2e109bf3a4f80ff0bc62326438, type: 2}

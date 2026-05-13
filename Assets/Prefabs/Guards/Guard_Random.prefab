@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   guardType: 1
-  pfFieldOfView: {fileID: 0}
+  pfFieldOfView: {fileID: 5568434568619286234, guid: 448d8e4612494483ea04f125f5016acb, type: 3}
   patroller: {fileID: 0}
   patrolSpeed: 2
   chaseSpeed: 4.5
