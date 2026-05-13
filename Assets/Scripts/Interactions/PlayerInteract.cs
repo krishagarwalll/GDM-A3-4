@@ -2,10 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Game.Core.Pause;
+using Game.Core.Audio;
 
 public class PlayerInteract : MonoBehaviour
 {
     [SerializeField] private float interactRange = 3f;
+
+    [Header("Audio")]
+    [SerializeField] private string selectSfxName = "select";
+    [SerializeField, Range(0f, 1f)] private float selectSfxVolume = 1f;
 
     private void Update()
     {
@@ -16,6 +21,9 @@ public class PlayerInteract : MonoBehaviour
             IInteractable interactable = GetInteractableObject();
             if (interactable != null)
             {
+                if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlaySFXByName(selectSfxName, selectSfxVolume);
+
                 interactable.Interact();
             }
         }
