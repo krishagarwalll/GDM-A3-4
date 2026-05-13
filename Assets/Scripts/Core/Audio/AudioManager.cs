@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.Core.Audio
@@ -15,6 +16,12 @@ namespace Game.Core.Audio
         [SerializeField, Range(0f, 1f)] private float musicVolume = 0.6f;
         [SerializeField, Range(0f, 1f)] private float sfxVolume = 1f;
 
+        [Header("Music Clips")]
+        [SerializeField] private AudioClip defaultMusic;
+
+        [Header("SFX Clips")]
+        [SerializeField] private SFXEntry[] sfxClips;
+
         private AudioClip _currentMusic;
 
         private void Awake()
@@ -27,6 +34,8 @@ namespace Game.Core.Audio
             if (sfxSource == null) sfxSource = CreateSource("SFX", loop: false);
 
             ApplyVolumes();
+
+            if (defaultMusic != null) PlayMusic(defaultMusic);
         }
 
         private void OnDestroy()
@@ -66,6 +75,21 @@ namespace Game.Core.Audio
             if (sfxSource != null)   sfxSource.volume   = sfxVolume;
         }
 
+        /// <summary>Play a named SFX clip assigned in the Inspector.</summary>
+        public void PlaySFXByName(string clipName, float volumeScale = 1f)
+        {
+            if (sfxClips == null) return;
+            foreach (var entry in sfxClips)
+            {
+                if (string.Equals(entry.name, clipName, StringComparison.OrdinalIgnoreCase))
+                {
+                    PlaySFX(entry.clip, volumeScale);
+                    return;
+                }
+            }
+            Debug.LogWarning($"[AudioManager] SFX '{clipName}' not found.");
+        }
+
         private AudioSource CreateSource(string name, bool loop)
         {
             var go = new GameObject(name);
@@ -76,5 +100,12 @@ namespace Game.Core.Audio
             src.spatialBlend = 0f;
             return src;
         }
+    }
+
+    [Serializable]
+    public struct SFXEntry
+    {
+        public string name;
+        public AudioClip clip;
     }
 }
