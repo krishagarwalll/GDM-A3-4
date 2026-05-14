@@ -5,6 +5,8 @@ public class WaypointPatroller : Patroller {
     private int currentIndex;
 
     public override Vector3 GetTarget() {
+        if (waypoints == null || waypoints.Length == 0 || waypoints[currentIndex] == null)
+            return transform.position;
         return waypoints[currentIndex].position;
     }
 

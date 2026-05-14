@@ -18,6 +18,12 @@ public class ExitInteractable : MonoBehaviour, IInteractable
 
     private bool _escaped;
 
+    private void Awake()
+    {
+        if (objectiveTracker == null)
+            objectiveTracker = FindObjectOfType<ObjectiveTracker>();
+    }
+
     public void Interact()
     {
         if (_escaped) return;

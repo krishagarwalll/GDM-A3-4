@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Game.Core.Events;
 using Game.Core.Game;
 
@@ -8,22 +9,18 @@ namespace Game.UI
     public class RestartLevelRequester : MonoBehaviour
     {
         [SerializeField] private GameSceneEventChannelSO channel;
-        [SerializeField] private LevelDataSO levelData;
-
-        private void Awake()
-        {
-            if (levelData == null || levelData.currentScene == null)
-                gameObject.SetActive(false);
-        }
 
         public void Request()
         {
-            if (channel == null || levelData == null || levelData.currentScene == null)
+            var levelData = LevelStarter.CurrentLevelData;
+            if (channel != null && levelData != null && levelData.currentScene != null)
             {
-                Debug.LogError($"[RestartLevelRequester] '{name}' missing channel or levelData.currentScene.");
+                channel.Raise(levelData.currentScene);
                 return;
             }
-            channel.Raise(levelData.currentScene);
+
+            // 回退：直接重载当前场景
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }

@@ -1,10 +1,23 @@
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Game.Core.Pause;
 
 public enum GuardType {
     Static,
     Patrolling
+}
+
+public enum GuardFacing {
+    Right,
+    Up,
+    Left,
+    Down
+}
+
+public enum DistractionIntensity {
+    Footstep = 1,
+    Loud = 2
 }
 
 public class EnemyAI : MonoBehaviour
@@ -45,10 +58,15 @@ public class EnemyAI : MonoBehaviour
     [Tooltip("How fast accumulated noise drains while the player is silent (per second).")]
     [SerializeField, Range(0.1f, 5f)] private float hearingDecayRate = 1f;
 
+    [Header("Facing")]
+    [Tooltip("Initial facing for Static guards (and the centre of their FOV sweep). Ignored for Patrolling.")]
+    [SerializeField] private GuardFacing initialFacing = GuardFacing.Right;
+
     private FieldOfView fieldOfView;
     private VisionSweep visionSweep;
     private AIPath aiPath;
     private Vector3 lastMoveDirection = Vector3.right;
+    private Vector3 currentAimDirection;
     private Vector3 homePosition;
     private Vector3 lastKnownPlayerPos;
     private State state;
@@ -71,9 +89,30 @@ public class EnemyAI : MonoBehaviour
         KnockedOut
     }
 
+    public Vector3 FacingDirection => currentAimDirection.sqrMagnitude > 0.0001f
+        ? currentAimDirection
+        : lastMoveDirection;
+
+    private static Vector3 FacingToVector(GuardFacing f)
+    {
+        switch (f)
+        {
+            case GuardFacing.Up:    return Vector3.up;
+            case GuardFacing.Left:  return Vector3.left;
+            case GuardFacing.Down:  return Vector3.down;
+            default:                return Vector3.right;
+        }
+    }
+
     private void Start()
     {
         homePosition = transform.position;
+
+        if (guardType == GuardType.Static)
+        {
+            lastMoveDirection = FacingToVector(initialFacing);
+        }
+        currentAimDirection = lastMoveDirection;
 
         var fovInstance = Instantiate(pfFieldOfView, null);
         fieldOfView = fovInstance.GetComponent<FieldOfView>();
@@ -85,10 +124,33 @@ public class EnemyAI : MonoBehaviour
         EnterState(State.Patrol);
     }
 
+    //--level5 sneak attack
+    private static bool IsLevel5Scene()
+    {
+        string name = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        return name == "level5" || name == "level5Scene";
+    }
+    //--level5 sneak attack
+
     private void Update()
     {
         if (PauseService.IsPaused) return;
         if (state == State.KnockedOut) return;
+
+        //--level5 darkmode: 黑灯时隐藏视野视觉锥并禁用检测
+        if (IsLevel5Scene() && fieldOfView != null)
+        {
+            bool wasSuppressed = !fieldOfView.enabled;
+            bool shouldSuppress = darkMode;
+            if (shouldSuppress != wasSuppressed)
+            {
+                fieldOfView.enabled = !shouldSuppress;
+                fieldOfView.gameObject.SetActive(!shouldSuppress);
+            }
+        }
+        //--level5 darkmode
+
+        if (IsLevel5Scene()) CheckSneakAttack();
 
         UpdateFacing();
         UpdateHearing();
@@ -103,9 +165,14 @@ public class EnemyAI : MonoBehaviour
         }
 
         bool sweepDriving = visionSweep != null && visionSweep.enabled;
-        if (fieldOfView != null && !sweepDriving)
+        if (sweepDriving)
         {
-            fieldOfView.SetAimDirection(lastMoveDirection);
+            currentAimDirection = visionSweep.GetCurrentSweepDirection();
+        }
+        else
+        {
+            if (fieldOfView != null) fieldOfView.SetAimDirection(lastMoveDirection);
+            currentAimDirection = lastMoveDirection;
         }
     }
 
@@ -119,24 +186,21 @@ public class EnemyAI : MonoBehaviour
             if (visionSweep != null) visionSweep.enabled = false;
             TurnTowards(heardNoisePos);
         }
+        else if (guardType == GuardType.Static)
+        {
+            // Static guard: stay put; lastMoveDirection follows the slow sweep
+            // direction so the FOV cone, sprite and (disabled) movement all face
+            // the same way.
+            if (aiPath != null) aiPath.canMove = false;
+            if (visionSweep != null && !visionSweep.enabled) visionSweep.enabled = true;
+            TurnTowardsDir(GetNaturalPatrolDirection());
+        }
         else
         {
-            Vector3 naturalDir = GetNaturalPatrolDirection();
-            bool aligned = Vector3.Angle(lastMoveDirection, naturalDir) <= 1f;
-
-            if (!aligned)
-            {
-                if (aiPath != null) aiPath.canMove = false;
-                if (visionSweep != null) visionSweep.enabled = false;
-                TurnTowardsDir(naturalDir);
-            }
-            else
-            {
-                if (aiPath != null && !aiPath.canMove) aiPath.canMove = true;
-                if (visionSweep != null && !visionSweep.enabled && guardType == GuardType.Static)
-                    visionSweep.enabled = true;
-                DriveAlongPatroller();
-            }
+            // Patrolling guard: just walk the route. AIPath handles steering;
+            // alignment gating here would deadlock against AIPath's velocity.
+            if (aiPath != null && !aiPath.canMove) aiPath.canMove = true;
+            DriveAlongPatroller();
         }
 
         if (CanSeePlayer())
@@ -246,6 +310,11 @@ public class EnemyAI : MonoBehaviour
     private bool CanSeePlayer()
     {
         if (fieldOfView == null || Player.Instance == null) return false;
+
+        //--level5 darkmode: 黑灯时守卫什么都看不见
+        if (IsLevel5Scene() && darkMode) return false;
+        //--level5 darkmode
+
         float mult = (reduceVisionForCrouchedPlayer && Player.Instance.IsCrouching)
             ? crouchedDetectionMultiplier : 1f;
         return fieldOfView.IsTargetVisible(Player.Instance.GetPosition, mult);
@@ -298,6 +367,8 @@ public class EnemyAI : MonoBehaviour
 
     private void UpdateFacing()
     {
+        if (state != State.Patrol) return;
+        if (IsHearingActive) return;
         if (aiPath != null && aiPath.velocity.sqrMagnitude > 0.01f)
         {
             lastMoveDirection = ((Vector3)aiPath.velocity).normalized;
@@ -318,7 +389,12 @@ public class EnemyAI : MonoBehaviour
         switch (s)
         {
             case State.Patrol:
-                if (visionSweep != null) visionSweep.enabled = (guardType == GuardType.Static);
+                if (visionSweep != null)
+                {
+                    visionSweep.enabled = (guardType == GuardType.Static);
+                    if (guardType == GuardType.Static)
+                        visionSweep.SetBaseDirection(lastMoveDirection);
+                }
                 if (aiPath != null)
                 {
                     aiPath.canMove = true;
@@ -372,6 +448,60 @@ public class EnemyAI : MonoBehaviour
     }
 
     public bool IsKnockedOut => state == State.KnockedOut;
+
+    //--level5 sneak attack
+    [Header("Sneak Attack (Level 5 Only)")]
+    [SerializeField, Range(0.5f, 5f)] private float sneakAttackRange = 2f;
+    private bool _sneakAttacked;
+
+    private void CheckSneakAttack()
+    {
+        if (_sneakAttacked) return;
+        if (Player.Instance == null || !Player.Instance.IsCrouching) return;
+
+        Vector3 toPlayer = Player.Instance.GetPosition - transform.position;
+        float range = sneakAttackRange;
+        if (toPlayer.sqrMagnitude > range * range) return;
+
+        // 点积 < 0 => 玩家在守卫背面方向
+        if (Vector3.Dot(FacingDirection, toPlayer.normalized) >= 0f) return;
+
+        _sneakAttacked = true;
+
+        // 守卫消失（参考 GuardInteractable 的处理方式）
+        if (fieldOfView != null) Destroy(fieldOfView.gameObject);
+        gameObject.SetActive(false);
+    }
+    //--level5 sneak attack
+
+    private static readonly string[] DistractionScenes = { "level1Scene", "level2Scene", "level3" };
+
+    private static bool IsDistractionScene()
+    {
+        string active = SceneManager.GetActiveScene().name;
+        for (int i = 0; i < DistractionScenes.Length; i++)
+        {
+            if (DistractionScenes[i] == active) return true;
+        }
+        return false;
+    }
+
+    public void OnDistraction(Vector3 worldPos, DistractionIntensity intensity)
+    {
+        if (!IsDistractionScene()) return;
+        if (state == State.KnockedOut || state == State.Alert) return;
+
+        if (intensity == DistractionIntensity.Footstep)
+        {
+            heardNoisePos = worldPos;
+            noiseLevel = hearingThreshold + 1f;
+        }
+        else
+        {
+            lastKnownPlayerPos = worldPos;
+            ChangeState(State.Search);
+        }
+    }
 
     private void OnDisable()
     {

@@ -46,6 +46,8 @@ namespace Game.Core.Scenes
                 HandleLoadRequest(_currentScene);
         }
 
+        public void LoadScene(GameSceneSO scene) => HandleLoadRequest(scene);
+
         private void HandleLoadRequest(GameSceneSO scene)
         {
             if (scene == null)
