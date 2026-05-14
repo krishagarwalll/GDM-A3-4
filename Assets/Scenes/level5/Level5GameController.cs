@@ -7,7 +7,7 @@ public class Level5GameController : MonoBehaviour
 
     public bool IsLightOn { get; private set; } = false;
 
-   private void Awake()
+/*    private void Start()
     {
         if (Instance != null && Instance != this)
         {
@@ -15,7 +15,7 @@ public class Level5GameController : MonoBehaviour
             return;
         }
         Instance = this;
-    }
+    }*/
 
     private IEnumerator Start()
     {

@@ -28,14 +28,8 @@ public class PlayerInteractUI : MonoBehaviour
 
     private void Show(IInteractable interactable)
     {
-        string text = interactable.GetInteractiveText();
-        if (string.IsNullOrEmpty(text))
-        {
-            hide();
-            return;
-        }
         containerGameObject.SetActive(true);
-        interactTextMeshProUGUI.text = text;
+        interactTextMeshProUGUI.text = interactable.GetInteractiveText();
     }
 
     private void hide()

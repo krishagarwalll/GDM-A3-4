@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.Game.LevelDataSO
   displayName: Tutorial
   objectiveLabel: Chests
-  durationSeconds: 60
+  durationSeconds: 120
   objectiveCount: 1
   currentScene: {fileID: 11400000, guid: 7058e32321339f249b6209eb7893cf1c, type: 2}
   nextScene: {fileID: 11400000, guid: a5afc3f4de8feb042af486a08298a8f6, type: 2}

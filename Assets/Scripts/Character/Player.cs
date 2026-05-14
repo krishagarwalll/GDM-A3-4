@@ -17,11 +17,9 @@ public class Player : MonoBehaviour {
     private Vector3 moveDir;
     private Vector3 baseLocalScale;
     private bool isCrouching;
-    private int movementLockCount;
 
     public bool IsCrouching => isCrouching;
     public bool IsMoving => moveDir.sqrMagnitude > 0;
-    public bool IsMovementLocked => movementLockCount > 0;
     public Vector3 GetPosition => transform.position;
 
     private void Awake() {
@@ -37,12 +35,6 @@ public class Player : MonoBehaviour {
 
     private void Update() {
         if (PauseService.IsPaused) {
-            moveDir = Vector3.zero;
-            if (animator != null) animator.SetBool("isRunning", false);
-            return;
-        }
-
-        if (IsMovementLocked) {
             moveDir = Vector3.zero;
             if (animator != null) animator.SetBool("isRunning", false);
             return;
@@ -71,24 +63,8 @@ public class Player : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if (IsMovementLocked) {
-            rb.linearVelocity = Vector2.zero;
-            return;
-        }
-
         float speed = MOVE_SPEED * (isCrouching ? CROUCH_SPEED_MULTIPLIER : 1f);
         rb.linearVelocity = moveDir * speed;
-    }
-
-    public void SetMovementLocked(bool locked) {
-        if (locked) movementLockCount++;
-        else movementLockCount = Mathf.Max(0, movementLockCount - 1);
-
-        if (!IsMovementLocked) return;
-
-        moveDir = Vector3.zero;
-        rb.linearVelocity = Vector2.zero;
-        if (animator != null) animator.SetBool("isRunning", false);
     }
 
     private void HandleCrouchToggle() {

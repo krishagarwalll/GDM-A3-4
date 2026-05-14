@@ -14,12 +14,8 @@ namespace Game.Core.Game
 
         public LevelDataSO LevelData => levelData;
 
-        public static LevelStarter Active { get; private set; }
-        public static LevelDataSO CurrentLevelData => Active != null ? Active.levelData : null;
-
         private void Awake()
         {
-            Active = this;
             Time.timeScale = 1f;
 
             if (levelData == null)
@@ -32,11 +28,6 @@ namespace Game.Core.Game
                 timer.durationSeconds = levelData.durationSeconds;
             if (objectiveTracker != null)
                 objectiveTracker.requiredCount = levelData.objectiveCount;
-        }
-
-        private void OnDestroy()
-        {
-            if (Active == this) Active = null;
         }
     }
 }

@@ -10,6 +10,9 @@ namespace Game.UI
         [Header("Channels (input)")]
         [SerializeField] private IntEventChannelSO onCountChanged;
 
+        [Header("Data")]
+        [SerializeField] private LevelDataSO levelData;
+
         [Header("UI")]
         [SerializeField] private TextMeshProUGUI label;
 
@@ -31,9 +34,7 @@ namespace Game.UI
 
         private void UpdateLabel(int current)
         {
-            if (label == null) return;
-            var levelData = LevelStarter.CurrentLevelData;
-            if (levelData == null) return;
+            if (label == null || levelData == null) return;
             label.text = $"{levelData.objectiveLabel}: {current} / {levelData.objectiveCount}";
         }
     }
